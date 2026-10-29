@@ -1,0 +1,75 @@
+# Brightdesk (../../../demo-app) captured screen by screen, read-only.
+# Start the app first:  node demo-app/server.mjs     then:  ./shots run examples/demo/plan.yaml
+name: Brightdesk
+base_url: ${BRIGHTDESK_URL:-http://127.0.0.1:4173}
+viewport: {width: 1440, height: 900}
+settle_ms: 600
+
+# Nothing the capture does may change the app: every write is aborted, except signing in.
+readonly:
+  methods: [POST, PUT, PATCH, DELETE]
+  allow: [/api/login]
+
+hide: ["#toasts"]            # never photograph a passing notification
+ignore_api: [/api/me, /api/login]   # 401s there are expected: signed out, wrong password
+
+login:
+  steps:
+    - goto: /login
+    - fill:
+        label=Email: ${BRIGHTDESK_USER:-demo@brightdesk.test}
+        label=Password: ${BRIGHTDESK_PASS:-demo1234}
+    - click: role=button[name="Sign in"]
+    - wait: {text: Recent requests}
+
+flows:
+  - id: 01_sign_in
+    title: Signing in
+    fresh: true              # a signed-out browser
+    steps:
+      - goto: /
+      - wait: {url: "**/login"}
+      - shot: {name: sign_in, caption: "Opening the app while signed out lands on the sign-in page."}
+      - fill: {label=Email: demo@brightdesk.test, label=Password: wrong-password}
+      - click: role=button[name="Sign in"]
+      - shot: {name: wrong_password, caption: "A wrong password is refused with a plain message."}
+
+  - id: 02_dashboard
+    title: Dashboard
+    steps:
+      - goto: /
+      - wait: {text: Recent requests}
+      - shot: {name: dashboard, caption: "Open, high-priority and resolved counts, then the newest requests."}
+      - open_first: .recent a
+      - shot: {name: request_detail, caption: "One request: category, priority, status and what happened."}
+
+  - id: 03_requests
+    title: Requests
+    steps:
+      - goto: /requests
+      - shot: {name: all_requests, caption: "Every request, newest first."}
+      - click: role=tab[name="Open"]
+      - shot: {name: open_only, caption: "The Open tab hides what is already resolved."}
+      - goto: /requests/new
+      - shot: {name: new_request_blank, caption: "The New request form."}
+      - fill: {label=Title: Projector in room 4 has no signal}
+      - select: {label=Category: Technical}
+      - check: role=radio[name="High"]
+      - fill: {label=Description: Nothing shows from either HDMI port.}
+      - shot: {name: new_request_filled, caption: "Filled in and ready to create."}
+      - click: role=button[name="Create request"]
+      - shot: {name: create_blocked, caption: "Create request, clicked anyway: the read-only guard aborted the save, so nothing was written."}
+
+  - id: 04_import
+    title: Import from a spreadsheet
+    steps:
+      - goto: /import
+      - shot: {name: import_start, caption: "Import starts from a CSV file; the template shows the columns."}
+      - upload: {"#csv-file": sample-requests.csv}
+      - wait: {text: ready}
+      - shot: {name: import_preview, caption: "Every row is checked in the browser before anything is saved."}
+
+  - id: 05_settings
+    title: Settings
+    pages:
+      - {path: /settings, name: settings, caption: "Team name and accent colour."}

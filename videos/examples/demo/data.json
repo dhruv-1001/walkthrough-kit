@@ -1,0 +1,21 @@
+{
+  "baseUrl": "http://127.0.0.1:4173",
+  "user": { "email": "demo@brightdesk.test", "password": "demo1234" },
+  "request": {
+    "title": "Wi-Fi keeps dropping in the meeting rooms",
+    "category": "Technical",
+    "priority": "High",
+    "description": "Calls cut out every few minutes in rooms 2A and 2B since Monday."
+  },
+  "import": {
+    "file": "requests.csv",
+    "rows": [
+      { "title": "New starter needs a laptop", "category": "Account", "priority": "Normal", "description": "Starts on the 3rd, in Finance." },
+      { "title": "Refund for a double charge", "category": "Billing", "priority": "High", "description": "Card charged twice on the 14th." },
+      { "title": "Shared drive is read-only", "category": "Technical", "priority": "Normal", "description": "Since this morning's update." },
+      { "title": "", "category": "Other", "priority": "Low", "description": "Row left without a title, to show the check." }
+    ]
+  },
+  "team": { "name": "Northside Support", "accent": "Green" },
+  "voice": { "id": "af_heart", "speed": 1, "lexicon": {} }
+}

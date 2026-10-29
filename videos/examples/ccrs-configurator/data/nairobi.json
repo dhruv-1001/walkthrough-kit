@@ -1,0 +1,222 @@
+{
+  "_comment": "Everything the videos type, pick and upload. Edit and re-run ./redo.sh — names here are fictional demo data.",
+  "baseUrl": "http://localhost",
+  "mailpitUrl": "http://127.0.0.1:18025",
+  "voice": {
+    "_comment": "Kokoro voice for the narration (af_heart = American, bf_emma = British). lexicon: word -> phonemes for names it says wrong.",
+    "id": "af_heart",
+    "speed": 1,
+    "lexicon": {
+      "Otieno": "Otiˈɛno",
+      "Kamau": "kɑmˈW",
+      "GeoJSON": "ʤˈiOʤˌAsən"
+    }
+  },
+  "founder": {
+    "firstName": "Amina",
+    "lastName": "Wekesa",
+    "email": "amina.wekesa@nairobi-demo.example.org"
+  },
+  "account": {
+    "name": "Nairobi City County",
+    "code": "NAIROBI",
+    "slug": "nairobi",
+    "country": "KE",
+    "languages": [],
+    "financialYear": "July to June",
+    "mobile": "712345678",
+    "_languages": "Master f10632871 offers English, French, Hindi and Portuguese (SignupPage.tsx LANGUAGES; Swahili withdrawn) with English picked; [] keeps English only."
+  },
+  "branding": {
+    "logo": "assets/nairobi-logo.png",
+    "theme": "Green and Gold"
+  },
+  "geography": {
+    "_source": "preconfigured = the country's official set (needs the signup country to have one); fetch = Fetch boundaries. fetchPass = the full Fetch boundaries walkthrough (scenes/03c, its own pass): sourceLabel is an option of Boundary source (master: Official boundaries / OpenStreetMap); keep = the 'Level N' cards kept and their names; levelCounts/skipped = what the list and the review screen then read (checked against the page, warned on mismatch).",
+    "source": "preconfigured",
+    "search": "Nairobi",
+    "pick": "Nairobi — County",
+    "levels": [
+      "County",
+      "Sub-county",
+      "Ward"
+    ],
+    "fetchPass": {
+      "sourceLabel": "OpenStreetMap",
+      "search": "Nairobi",
+      "pick": "Nairobi — region",
+      "levelsFound": 6,
+      "keep": [
+        {
+          "level": 1,
+          "name": "County"
+        },
+        {
+          "level": 2,
+          "name": "Sub-county"
+        },
+        {
+          "level": 3,
+          "name": "Locality"
+        }
+      ],
+      "levelCounts": [
+        {
+          "level": "County",
+          "count": 1
+        },
+        {
+          "level": "Sub-county",
+          "count": 11
+        },
+        {
+          "level": "Locality",
+          "count": 161
+        }
+      ],
+      "skipped": 0,
+      "_checked": "2026-10-28 against a live turbopass (overture release 2026-09-23.1) with the configurator's grouping (osmBoundaries.ts groupFetchedLevels: by depth, all ticked, no suggested names) and parent rule: levels 1-3 keep 1/11/161, none skipped."
+    }
+  },
+  "departments": [
+    {
+      "name": "Roads and Transport",
+      "code": "ROADS_TRANSPORT"
+    },
+    {
+      "name": "Water and Sanitation",
+      "code": "WATER_SANITATION"
+    },
+    {
+      "name": "Environment and Solid Waste",
+      "code": "ENVIRONMENT_WASTE"
+    }
+  ],
+  "designations": [
+    {
+      "name": "Ward Administrator",
+      "code": "WARD_ADMINISTRATOR",
+      "departments": []
+    },
+    {
+      "name": "Engineer",
+      "code": "ENGINEER",
+      "departments": [
+        "Roads and Transport",
+        "Water and Sanitation"
+      ]
+    },
+    {
+      "name": "Environment Officer",
+      "code": "ENVIRONMENT_OFFICER",
+      "departments": [
+        "Environment and Solid Waste"
+      ]
+    }
+  ],
+  "employees": [
+    {
+      "name": "Brian Otieno",
+      "mobile": "712000101",
+      "email": "brian.otieno@nairobi-demo.example.org",
+      "departments": [
+        "Roads and Transport"
+      ],
+      "designation": "Engineer",
+      "roles": [
+        "GRO",
+        "PGR_LME"
+      ],
+      "jurisdictions": [
+        "Nairobi"
+      ],
+      "gender": "MALE"
+    },
+    {
+      "name": "Grace Achieng",
+      "mobile": "712000102",
+      "email": "grace.achieng@nairobi-demo.example.org",
+      "departments": [
+        "Water and Sanitation"
+      ],
+      "designation": "Engineer",
+      "roles": [
+        "GRO",
+        "PGR_LME"
+      ],
+      "jurisdictions": [
+        "Nairobi"
+      ],
+      "gender": "FEMALE"
+    },
+    {
+      "name": "Peter Kamau",
+      "mobile": "712000103",
+      "email": "peter.kamau@nairobi-demo.example.org",
+      "departments": [
+        "Environment and Solid Waste"
+      ],
+      "designation": "Environment Officer",
+      "roles": [
+        "GRO",
+        "PGR_LME"
+      ],
+      "jurisdictions": [
+        "Nairobi"
+      ],
+      "gender": "MALE"
+    }
+  ],
+  "complaints": {
+    "categories": [
+      {
+        "name": "Street lighting",
+        "department": "Roads and Transport",
+        "subcategories": [
+          "Street light not working",
+          "Street light flickering"
+        ],
+        "resolution": "default"
+      },
+      {
+        "name": "Roads",
+        "department": "Roads and Transport",
+        "subcategories": [
+          "Pothole",
+          "Damaged road sign"
+        ],
+        "resolution": "default"
+      },
+      {
+        "name": "Water supply",
+        "department": "Water and Sanitation",
+        "subcategories": [
+          "No water supply",
+          "Burst pipe",
+          "Sewer blockage"
+        ],
+        "resolution": "default"
+      },
+      {
+        "name": "Garbage",
+        "department": "Environment and Solid Waste",
+        "subcategories": [
+          "Garbage not collected",
+          "Illegal dumping"
+        ],
+        "resolution": "default"
+      }
+    ]
+  },
+  "spreadsheets": {
+    "_comment": "The 'from spreadsheets' pass uploads files built from this data (lib/make_sheets.py). boundaries = rows from lib/boundaries_from_turbopass.py.",
+    "boundaries": "nairobi-boundaries.json",
+    "hierarchyLevels": [
+      "County",
+      "Sub-county",
+      "Ward"
+    ],
+    "employeeCodeStart": 2,
+    "defaultResolutionHours": 72
+  }
+}

@@ -1,0 +1,107 @@
+# The CCRS / DIGIT configurator on a local DIGIT stack: the sign-in screens,
+# the account pages and every Management Studio route, read-only.
+#
+#   export CCRS_EMAIL=you@example.org CCRS_PASSWORD=...   # a Keycloak account with a password
+#   # or, for an account that signed up by magic link (no password), a saved session:
+#   export CCRS_STORAGE_STATE=/path/to/signed-in-state.json
+#   ./shots run examples/ccrs-configurator/plan.yaml
+#
+# Run against a shared deployment, the guard below is what keeps it read-only:
+# DIGIT reads are POSTs to .../_search, so it blocks DIGIT's write verbs instead of POST.
+name: CCRS configurator
+base_url: ${CCRS_URL:-http://localhost}
+viewport: {width: 1440, height: 900}
+settle_ms: 5000                     # lists fetch after they mount
+
+readonly:
+  methods: [PUT, PATCH, DELETE]
+  paths: [_create, _update, _delete, _upsert, _transition, _apply, _activate, _deactivate, _publish,
+          _import, _bulk, _assign, _close, _reopen, _reject, _add, _remove, _send, filestore/v1/files]
+  allow: [oauth/token]
+
+ignore_api: [sentry, posthog, /identity/]   # telemetry and the session check: not the screen's own data
+
+hooks: hooks.py
+
+login:
+  storage_state: ${CCRS_STORAGE_STATE:-}
+  # Keycloak is username-first: email -> Sign In -> password -> Sign In -> workspace chooser.
+  steps:
+    - goto: /configurator/
+    - click: role=button[name="Log in"]
+    - fill: {"#username": "${CCRS_EMAIL}"}
+    - click: "#kc-login"
+    - fill: {"#password": "${CCRS_PASSWORD}"}
+    - click: "#kc-login"
+    - call: {fn: choose_workspace, args: {name: "${CCRS_WORKSPACE:-Nairobi City County}"}}
+
+flows:
+  - id: d01_signin
+    title: Signing in
+    fresh: true
+    description: The screens before sign-in, from a clean browser. Nothing is submitted.
+    steps:
+      - goto: /configurator/
+      - shot: {name: configurator_landing, caption: "The configurator, signed out.", full_page: false}
+      - click: role=button[name="Log in"]
+      - wait: {selector: "#username", timeout: 30000}
+      - shot: {name: keycloak_email_step, caption: "Sign-in asks for the email first.", full_page: false}
+      - goto: /configurator/
+      - click: text=Set up or reset your password
+      - wait: 5000                  # the brand panel's quote fades in
+      - shot: {name: password_setup_link_form, caption: "Set up or reset a password by email.", full_page: false}
+      - goto: /configurator/signup
+      - shot: {name: signup_blank, caption: "Sign-up: verify your email to begin.", full_page: false}
+
+  - id: d08_account
+    title: Your account
+    description: The account menu and the pages it opens.
+    steps:
+      - call: management_mode
+      - click: button[aria-haspopup=menu] >> nth=-1
+      - wait: 1200
+      - shot: {name: account_menu, caption: "The account menu.", full_page: false}
+      - press: Escape
+    pages:
+      - {path: /configurator/account, name: your_account, caption: "Your account: password, authenticator, email, signed-in sessions."}
+      - {path: /configurator/members, name: members, caption: "Members: everyone in the workspace."}
+      - {path: /configurator/workspace-settings, name: workspace_settings, caption: "Workspace settings: name and invitation expiry."}
+
+  - id: d09_manage
+    title: Management Studio
+    description: Every console route (configurator/src/admin/navGroups.ts), with the API calls behind each one checked.
+    steps:
+      - call: management_mode
+    pages:
+      - {path: /configurator/manage, name: dashboard_home, caption: "Console home: workspace links, then every registry."}
+      - {path: /configurator/manage/public-dashboard, name: public_dashboard, caption: "Public Dashboard settings."}
+      - {path: /configurator/manage/branding, name: branding, caption: "Branding, editable after onboarding."}
+      - {path: /configurator/manage/tenants, name: tenants, caption: "Tenants: the workspace's own tenant."}
+      - {path: /configurator/manage/departments, name: departments, caption: "Departments."}
+      - {path: /configurator/manage/designations, name: designations, caption: "Designations."}
+      - {path: /configurator/manage/boundary-hierarchies, name: boundary_hierarchies, caption: "Boundary Hierarchies."}
+      - {path: /configurator/manage/boundaries, name: boundaries, caption: "Boundaries, with their map outlines."}
+      - {path: /configurator/manage/map-config, name: map_configuration, caption: "Map Configuration."}
+      - {path: /configurator/manage/complaints, name: complaints, caption: "Complaints filed so far."}
+      - {path: /configurator/manage/complaint-hierarchy, name: complaint_types, caption: "Complaint Categories, with department and resolution time."}
+      - {path: /configurator/manage/complaint-hierarchies, name: complaint_hierarchies, caption: "Complaint Hierarchies."}
+      - {path: /configurator/manage/escalation-policy, name: escalation_policy, caption: "Escalation Policy: levels and the automatic scan."}
+      - {path: /configurator/manage/localization, name: localization, caption: "Localization messages."}
+      - {path: /configurator/manage/employees, name: employees, caption: "Employees."}
+      - {path: /configurator/manage/org-chart, name: org_chart, caption: "Org Chart."}
+      - {path: /configurator/manage/users, name: users, caption: "Users: citizen accounts."}
+      - {path: /configurator/manage/access-roles, name: access_roles, caption: "Access Roles."}
+      - {path: /configurator/manage/workflow-business-services, name: workflows, caption: "Workflow Business Services."}
+      - {path: /configurator/manage/workflow-processes, name: processes, caption: "Workflow Processes: none until a complaint is filed."}
+      - {path: /configurator/manage/mdms-schemas, name: mdms_schemas, caption: "MDMS Schemas."}
+      - {path: /configurator/manage/analytics-providers, name: analytics_providers, caption: "Analytics Providers: nothing is sent until one is switched on."}
+      - {path: /configurator/manage/notification-configure, name: notification_configure, caption: "Configure Notifications."}
+      - {path: /configurator/manage/notifications-channel, name: notification_channels, caption: "Notification Channels."}
+      - {path: /configurator/manage/notifications-event-catalogue, name: notification_event_catalogue, caption: "Notification Events."}
+      - {path: /configurator/manage/notifications-routing, name: notification_routing, caption: "Notification Routing."}
+      - {path: /configurator/manage/notifications-template, name: notification_templates, caption: "Notification Templates."}
+      - {path: /configurator/manage/notifications-provider-template, name: notification_provider_templates, caption: "Notification Provider Templates."}
+      - {path: /configurator/manage/notification-provider, name: notification_providers, caption: "Notification Providers."}
+      - {path: /configurator/manage/notification-log, name: notification_logs, caption: "Notification Logs."}
+      - {path: /configurator/manage/notification-preference, name: notification_preferences, caption: "User notification preferences."}
+      - {path: /configurator/manage/advanced, name: advanced_all_masters, caption: "Advanced: every MDMS master."}

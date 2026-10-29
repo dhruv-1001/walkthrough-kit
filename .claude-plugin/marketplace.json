@@ -1,0 +1,14 @@
+{
+  "name": "walkthrough-kit",
+  "owner": {
+    "name": "dhruv-1001"
+  },
+  "description": "Screenshot walkthroughs and narrated how-to videos of any web app.",
+  "plugins": [
+    {
+      "name": "walkthrough-kit",
+      "source": "./",
+      "description": "Screenshot walkthroughs and narrated how-to videos of any web app, driven by Playwright."
+    }
+  ]
+}

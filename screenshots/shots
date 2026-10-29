@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# ./shots <command> <plan.yaml> ... with the kit's Python (./setup.sh makes it).
+here="$(cd "$(dirname "$0")" && pwd)"
+py="${SHOTS_PYTHON:-$here/.venv/bin/python}"
+[ -x "$py" ] || { echo "No Python environment yet: run $here/setup.sh first" >&2; exit 1; }
+exec "$py" "$here/shots.py" "$@"

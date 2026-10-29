@@ -1,0 +1,833 @@
+[
+ {
+  "name": "Nairobi",
+  "level": "County",
+  "lat": -1.30007,
+  "lon": 36.88403,
+  "code": "NAIROBI"
+ },
+ {
+  "name": "Dagoretti",
+  "level": "Sub-county",
+  "lat": -1.28205,
+  "lon": 36.70997,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_DAGORETTI"
+ },
+ {
+  "name": "Embakasi Central",
+  "level": "Sub-county",
+  "lat": -1.27053,
+  "lon": 36.91926,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_EMBAKASI_CENTRAL"
+ },
+ {
+  "name": "Embakasi East",
+  "level": "Sub-county",
+  "lat": -1.28725,
+  "lon": 36.9209,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_EMBAKASI_EAST"
+ },
+ {
+  "name": "Embakasi North",
+  "level": "Sub-county",
+  "lat": -1.24408,
+  "lon": 36.90315,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_EMBAKASI_NORTH"
+ },
+ {
+  "name": "Embakasi South",
+  "level": "Sub-county",
+  "lat": -1.32216,
+  "lon": 36.87226,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_EMBAKASI_SOUTH"
+ },
+ {
+  "name": "Embakasi West",
+  "level": "Sub-county",
+  "lat": -1.26942,
+  "lon": 36.88752,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_EMBAKASI_WEST"
+ },
+ {
+  "name": "Kamukunji",
+  "level": "Sub-county",
+  "lat": -1.27579,
+  "lon": 36.85764,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_KAMUKUNJI"
+ },
+ {
+  "name": "Kasarani",
+  "level": "Sub-county",
+  "lat": -1.24151,
+  "lon": 36.97918,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_KASARANI"
+ },
+ {
+  "name": "Kibra",
+  "level": "Sub-county",
+  "lat": -1.30698,
+  "lon": 36.79399,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_KIBRA"
+ },
+ {
+  "name": "Kilimani",
+  "level": "Sub-county",
+  "lat": -1.27572,
+  "lon": 36.76683,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_KILIMANI"
+ },
+ {
+  "name": "Langata",
+  "level": "Sub-county",
+  "lat": -1.36389,
+  "lon": 36.80976,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_LANGATA"
+ },
+ {
+  "name": "Makadara",
+  "level": "Sub-county",
+  "lat": -1.29835,
+  "lon": 36.86644,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_MAKADARA"
+ },
+ {
+  "name": "Mathare",
+  "level": "Sub-county",
+  "lat": -1.25712,
+  "lon": 36.8592,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_MATHARE"
+ },
+ {
+  "name": "Roysambu",
+  "level": "Sub-county",
+  "lat": -1.19618,
+  "lon": 36.88127,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_ROYSAMBU"
+ },
+ {
+  "name": "Ruaraka",
+  "level": "Sub-county",
+  "lat": -1.243,
+  "lon": 36.88448,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_RUARAKA"
+ },
+ {
+  "name": "Starehe",
+  "level": "Sub-county",
+  "lat": -1.29234,
+  "lon": 36.8388,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_STAREHE"
+ },
+ {
+  "name": "Westlands",
+  "level": "Sub-county",
+  "lat": -1.24817,
+  "lon": 36.77515,
+  "parent": "NAIROBI",
+  "code": "NAIROBI_WESTLANDS"
+ },
+ {
+  "name": "Airbase",
+  "level": "Ward",
+  "lat": -1.27432,
+  "lon": 36.86695,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_AIRBASE"
+ },
+ {
+  "name": "Babadogo",
+  "level": "Ward",
+  "lat": -1.24315,
+  "lon": 36.88169,
+  "parent": "NAIROBI_RUARAKA",
+  "code": "NAIROBI_BABADOGO"
+ },
+ {
+  "name": "California",
+  "level": "Ward",
+  "lat": -1.28619,
+  "lon": 36.84954,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_CALIFORNIA"
+ },
+ {
+  "name": "Claycity",
+  "level": "Ward",
+  "lat": -1.22695,
+  "lon": 36.91267,
+  "parent": "NAIROBI_KASARANI",
+  "code": "NAIROBI_CLAYCITY"
+ },
+ {
+  "name": "Dandora Area I",
+  "level": "Ward",
+  "lat": -1.25723,
+  "lon": 36.88979,
+  "parent": "NAIROBI_EMBAKASI_WEST",
+  "code": "NAIROBI_DANDORA_AREA_I"
+ },
+ {
+  "name": "Dandora Area Ii",
+  "level": "Ward",
+  "lat": -1.24896,
+  "lon": 36.89624,
+  "parent": "NAIROBI_EMBAKASI_NORTH",
+  "code": "NAIROBI_DANDORA_AREA_II"
+ },
+ {
+  "name": "Dandora Area Iii",
+  "level": "Ward",
+  "lat": -1.24394,
+  "lon": 36.90321,
+  "parent": "NAIROBI_EMBAKASI_NORTH",
+  "code": "NAIROBI_DANDORA_AREA_III"
+ },
+ {
+  "name": "Dandora Area Iv",
+  "level": "Ward",
+  "lat": -1.24187,
+  "lon": 36.91647,
+  "parent": "NAIROBI_EMBAKASI_NORTH",
+  "code": "NAIROBI_DANDORA_AREA_IV"
+ },
+ {
+  "name": "Eastleigh North",
+  "level": "Ward",
+  "lat": -1.27217,
+  "lon": 36.8469,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_EASTLEIGH_NORTH"
+ },
+ {
+  "name": "Eastleigh South",
+  "level": "Ward",
+  "lat": -1.28537,
+  "lon": 36.85742,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_EASTLEIGH_SOUTH"
+ },
+ {
+  "name": "Embakasi",
+  "level": "Ward",
+  "lat": -1.30909,
+  "lon": 36.91821,
+  "parent": "NAIROBI_EMBAKASI_EAST",
+  "code": "NAIROBI_EMBAKASI"
+ },
+ {
+  "name": "Gatina",
+  "level": "Ward",
+  "lat": -1.27754,
+  "lon": 36.75432,
+  "parent": "NAIROBI_KILIMANI",
+  "code": "NAIROBI_GATINA"
+ },
+ {
+  "name": "Githurai",
+  "level": "Ward",
+  "lat": -1.20592,
+  "lon": 36.90215,
+  "parent": "NAIROBI_ROYSAMBU",
+  "code": "NAIROBI_GITHURAI"
+ },
+ {
+  "name": "Harambee",
+  "level": "Ward",
+  "lat": -1.28537,
+  "lon": 36.87568,
+  "parent": "NAIROBI_MAKADARA",
+  "code": "NAIROBI_HARAMBEE"
+ },
+ {
+  "name": "Hospital",
+  "level": "Ward",
+  "lat": -1.26323,
+  "lon": 36.84798,
+  "parent": "NAIROBI_MATHARE",
+  "code": "NAIROBI_HOSPITAL"
+ },
+ {
+  "name": "Huruma",
+  "level": "Ward",
+  "lat": -1.25846,
+  "lon": 36.87098,
+  "parent": "NAIROBI_MATHARE",
+  "code": "NAIROBI_HURUMA"
+ },
+ {
+  "name": "Imara Daima",
+  "level": "Ward",
+  "lat": -1.35045,
+  "lon": 36.88686,
+  "parent": "NAIROBI_EMBAKASI_SOUTH",
+  "code": "NAIROBI_IMARA_DAIMA"
+ },
+ {
+  "name": "Kabiro",
+  "level": "Ward",
+  "lat": -1.28047,
+  "lon": 36.73758,
+  "parent": "NAIROBI_KILIMANI",
+  "code": "NAIROBI_KABIRO"
+ },
+ {
+  "name": "Kahawa",
+  "level": "Ward",
+  "lat": -1.19424,
+  "lon": 36.90662,
+  "parent": "NAIROBI_ROYSAMBU",
+  "code": "NAIROBI_KAHAWA"
+ },
+ {
+  "name": "Kahawa West",
+  "level": "Ward",
+  "lat": -1.17771,
+  "lon": 36.9128,
+  "parent": "NAIROBI_ROYSAMBU",
+  "code": "NAIROBI_KAHAWA_WEST"
+ },
+ {
+  "name": "Kangemi",
+  "level": "Ward",
+  "lat": -1.2687,
+  "lon": 36.75283,
+  "parent": "NAIROBI_WESTLANDS",
+  "code": "NAIROBI_KANGEMI"
+ },
+ {
+  "name": "Karen",
+  "level": "Ward",
+  "lat": -1.3231,
+  "lon": 36.73253,
+  "parent": "NAIROBI_LANGATA",
+  "code": "NAIROBI_KAREN"
+ },
+ {
+  "name": "Kariobangi North",
+  "level": "Ward",
+  "lat": -1.2513,
+  "lon": 36.88311,
+  "parent": "NAIROBI_EMBAKASI_NORTH",
+  "code": "NAIROBI_KARIOBANGI_NORTH"
+ },
+ {
+  "name": "Kariobangi South",
+  "level": "Ward",
+  "lat": -1.2706,
+  "lon": 36.8804,
+  "parent": "NAIROBI_EMBAKASI_WEST",
+  "code": "NAIROBI_KARIOBANGI_SOUTH"
+ },
+ {
+  "name": "Karura",
+  "level": "Ward",
+  "lat": -1.2434,
+  "lon": 36.79921,
+  "parent": "NAIROBI_WESTLANDS",
+  "code": "NAIROBI_KARURA"
+ },
+ {
+  "name": "Kasarani",
+  "level": "Ward",
+  "lat": -1.23573,
+  "lon": 36.88497,
+  "parent": "NAIROBI_KASARANI",
+  "code": "NAIROBI_KASARANI_2"
+ },
+ {
+  "name": "Kawangware",
+  "level": "Ward",
+  "lat": -1.28443,
+  "lon": 36.74551,
+  "parent": "NAIROBI_KILIMANI",
+  "code": "NAIROBI_KAWANGWARE"
+ },
+ {
+  "name": "Kayole Central",
+  "level": "Ward",
+  "lat": -1.27849,
+  "lon": 36.91706,
+  "parent": "NAIROBI_EMBAKASI_CENTRAL",
+  "code": "NAIROBI_KAYOLE_CENTRAL"
+ },
+ {
+  "name": "Kayole North",
+  "level": "Ward",
+  "lat": -1.26802,
+  "lon": 36.92251,
+  "parent": "NAIROBI_EMBAKASI_CENTRAL",
+  "code": "NAIROBI_KAYOLE_NORTH"
+ },
+ {
+  "name": "Kayole South",
+  "level": "Ward",
+  "lat": -1.28561,
+  "lon": 36.91376,
+  "parent": "NAIROBI_EMBAKASI_CENTRAL",
+  "code": "NAIROBI_KAYOLE_SOUTH"
+ },
+ {
+  "name": "Kiamaiko",
+  "level": "Ward",
+  "lat": -1.25482,
+  "lon": 36.87663,
+  "parent": "NAIROBI_MATHARE",
+  "code": "NAIROBI_KIAMAIKO"
+ },
+ {
+  "name": "Kileleshwa",
+  "level": "Ward",
+  "lat": -1.27308,
+  "lon": 36.78306,
+  "parent": "NAIROBI_KILIMANI",
+  "code": "NAIROBI_KILELESHWA"
+ },
+ {
+  "name": "Kilimani",
+  "level": "Ward",
+  "lat": -1.2825,
+  "lon": 36.78467,
+  "parent": "NAIROBI_KILIMANI",
+  "code": "NAIROBI_KILIMANI_2"
+ },
+ {
+  "name": "Kitisuru",
+  "level": "Ward",
+  "lat": -1.24872,
+  "lon": 36.76725,
+  "parent": "NAIROBI_WESTLANDS",
+  "code": "NAIROBI_KITISURU"
+ },
+ {
+  "name": "Komarock",
+  "level": "Ward",
+  "lat": -1.26948,
+  "lon": 36.90941,
+  "parent": "NAIROBI_EMBAKASI_CENTRAL",
+  "code": "NAIROBI_KOMAROCK"
+ },
+ {
+  "name": "Korogocho",
+  "level": "Ward",
+  "lat": -1.24706,
+  "lon": 36.89326,
+  "parent": "NAIROBI_RUARAKA",
+  "code": "NAIROBI_KOROGOCHO"
+ },
+ {
+  "name": "Kwa Njenga",
+  "level": "Ward",
+  "lat": -1.32437,
+  "lon": 36.88012,
+  "parent": "NAIROBI_EMBAKASI_SOUTH",
+  "code": "NAIROBI_KWA_NJENGA"
+ },
+ {
+  "name": "Kwa Reuben",
+  "level": "Ward",
+  "lat": -1.31901,
+  "lon": 36.86145,
+  "parent": "NAIROBI_EMBAKASI_SOUTH",
+  "code": "NAIROBI_KWA_REUBEN"
+ },
+ {
+  "name": "Kware",
+  "level": "Ward",
+  "lat": -1.31842,
+  "lon": 36.88731,
+  "parent": "NAIROBI_EMBAKASI_SOUTH",
+  "code": "NAIROBI_KWARE"
+ },
+ {
+  "name": "Laini Saba",
+  "level": "Ward",
+  "lat": -1.31251,
+  "lon": 36.80749,
+  "parent": "NAIROBI_LANGATA",
+  "code": "NAIROBI_LAINI_SABA"
+ },
+ {
+  "name": "Landimawe",
+  "level": "Ward",
+  "lat": -1.30646,
+  "lon": 36.84136,
+  "parent": "NAIROBI_STAREHE",
+  "code": "NAIROBI_LANDIMAWE"
+ },
+ {
+  "name": "Lindi",
+  "level": "Ward",
+  "lat": -1.31599,
+  "lon": 36.79162,
+  "parent": "NAIROBI_KIBRA",
+  "code": "NAIROBI_LINDI"
+ },
+ {
+  "name": "Lower Savannah",
+  "level": "Ward",
+  "lat": -1.29658,
+  "lon": 36.89648,
+  "parent": "NAIROBI_EMBAKASI_EAST",
+  "code": "NAIROBI_LOWER_SAVANNAH"
+ },
+ {
+  "name": "Lucky Summer",
+  "level": "Ward",
+  "lat": -1.23916,
+  "lon": 36.89952,
+  "parent": "NAIROBI_RUARAKA",
+  "code": "NAIROBI_LUCKY_SUMMER"
+ },
+ {
+  "name": "Mabatini",
+  "level": "Ward",
+  "lat": -1.26321,
+  "lon": 36.85854,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_MABATINI"
+ },
+ {
+  "name": "Makina",
+  "level": "Ward",
+  "lat": -1.30983,
+  "lon": 36.78578,
+  "parent": "NAIROBI_KIBRA",
+  "code": "NAIROBI_MAKINA"
+ },
+ {
+  "name": "Makongeni",
+  "level": "Ward",
+  "lat": -1.29593,
+  "lon": 36.85417,
+  "parent": "NAIROBI_MAKADARA",
+  "code": "NAIROBI_MAKONGENI"
+ },
+ {
+  "name": "Maringo/Hamza",
+  "level": "Ward",
+  "lat": -1.2905,
+  "lon": 36.8637,
+  "parent": "NAIROBI_MAKADARA",
+  "code": "NAIROBI_MARINGO_HAMZA"
+ },
+ {
+  "name": "Mathare North",
+  "level": "Ward",
+  "lat": -1.25285,
+  "lon": 36.87065,
+  "parent": "NAIROBI_RUARAKA",
+  "code": "NAIROBI_MATHARE_NORTH"
+ },
+ {
+  "name": "Matopeni",
+  "level": "Ward",
+  "lat": -1.2643,
+  "lon": 36.92992,
+  "parent": "NAIROBI_EMBAKASI_CENTRAL",
+  "code": "NAIROBI_MATOPENI"
+ },
+ {
+  "name": "Mihango",
+  "level": "Ward",
+  "lat": -1.2784,
+  "lon": 36.92987,
+  "parent": "NAIROBI_EMBAKASI_EAST",
+  "code": "NAIROBI_MIHANGO"
+ },
+ {
+  "name": "Mlango Kubwa",
+  "level": "Ward",
+  "lat": -1.2643,
+  "lon": 36.84723,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_MLANGO_KUBWA"
+ },
+ {
+  "name": "Mountain View",
+  "level": "Ward",
+  "lat": -1.27033,
+  "lon": 36.73686,
+  "parent": "NAIROBI_WESTLANDS",
+  "code": "NAIROBI_MOUNTAIN_VIEW"
+ },
+ {
+  "name": "Mowlem",
+  "level": "Ward",
+  "lat": -1.26495,
+  "lon": 36.89716,
+  "parent": "NAIROBI_EMBAKASI_WEST",
+  "code": "NAIROBI_MOWLEM"
+ },
+ {
+  "name": "Mugumo-Ini",
+  "level": "Ward",
+  "lat": -1.35738,
+  "lon": 36.82846,
+  "parent": "NAIROBI_LANGATA",
+  "code": "NAIROBI_MUGUMO_INI"
+ },
+ {
+  "name": "Mutuini",
+  "level": "Ward",
+  "lat": -1.2935,
+  "lon": 36.69985,
+  "parent": "NAIROBI_DAGORETTI",
+  "code": "NAIROBI_MUTUINI"
+ },
+ {
+  "name": "Mwiki",
+  "level": "Ward",
+  "lat": -1.23923,
+  "lon": 36.94622,
+  "parent": "NAIROBI_KASARANI",
+  "code": "NAIROBI_MWIKI"
+ },
+ {
+  "name": "Mwiki",
+  "level": "Ward",
+  "lat": -1.21484,
+  "lon": 36.91928,
+  "parent": "NAIROBI_KASARANI",
+  "code": "NAIROBI_MWIKI_2"
+ },
+ {
+  "name": "Nairobi Central",
+  "level": "Ward",
+  "lat": -1.2858,
+  "lon": 36.83269,
+  "parent": "NAIROBI_STAREHE",
+  "code": "NAIROBI_NAIROBI_CENTRAL"
+ },
+ {
+  "name": "Nairobi South",
+  "level": "Ward",
+  "lat": -1.31212,
+  "lon": 36.84032,
+  "parent": "NAIROBI_STAREHE",
+  "code": "NAIROBI_NAIROBI_SOUTH"
+ },
+ {
+  "name": "Nairobi West",
+  "level": "Ward",
+  "lat": -1.31252,
+  "lon": 36.81464,
+  "parent": "NAIROBI_LANGATA",
+  "code": "NAIROBI_NAIROBI_WEST"
+ },
+ {
+  "name": "Ngando",
+  "level": "Ward",
+  "lat": -1.29915,
+  "lon": 36.74455,
+  "parent": "NAIROBI_DAGORETTI",
+  "code": "NAIROBI_NGANDO"
+ },
+ {
+  "name": "Ngara",
+  "level": "Ward",
+  "lat": -1.27472,
+  "lon": 36.82366,
+  "parent": "NAIROBI_STAREHE",
+  "code": "NAIROBI_NGARA"
+ },
+ {
+  "name": "Ngei",
+  "level": "Ward",
+  "lat": -1.25934,
+  "lon": 36.86763,
+  "parent": "NAIROBI_MATHARE",
+  "code": "NAIROBI_NGEI"
+ },
+ {
+  "name": "Njiru",
+  "level": "Ward",
+  "lat": -1.25055,
+  "lon": 36.92328,
+  "parent": "NAIROBI_KASARANI",
+  "code": "NAIROBI_NJIRU"
+ },
+ {
+  "name": "Nyayo Highrise",
+  "level": "Ward",
+  "lat": -1.31258,
+  "lon": 36.81209,
+  "parent": "NAIROBI_LANGATA",
+  "code": "NAIROBI_NYAYO_HIGHRISE"
+ },
+ {
+  "name": "Pangani",
+  "level": "Ward",
+  "lat": -1.27071,
+  "lon": 36.83813,
+  "parent": "NAIROBI_STAREHE",
+  "code": "NAIROBI_PANGANI"
+ },
+ {
+  "name": "Parklands/Highridge",
+  "level": "Ward",
+  "lat": -1.25573,
+  "lon": 36.79493,
+  "parent": "NAIROBI_WESTLANDS",
+  "code": "NAIROBI_PARKLANDS_HIGHRIDGE"
+ },
+ {
+  "name": "Pipeline",
+  "level": "Ward",
+  "lat": -1.31549,
+  "lon": 36.88985,
+  "parent": "NAIROBI_EMBAKASI_SOUTH",
+  "code": "NAIROBI_PIPELINE"
+ },
+ {
+  "name": "Pumwani",
+  "level": "Ward",
+  "lat": -1.28565,
+  "lon": 36.84122,
+  "parent": "NAIROBI_KAMUKUNJI",
+  "code": "NAIROBI_PUMWANI"
+ },
+ {
+  "name": "Riruta",
+  "level": "Ward",
+  "lat": -1.29428,
+  "lon": 36.74092,
+  "parent": "NAIROBI_DAGORETTI",
+  "code": "NAIROBI_RIRUTA"
+ },
+ {
+  "name": "Roysambu",
+  "level": "Ward",
+  "lat": -1.23212,
+  "lon": 36.86418,
+  "parent": "NAIROBI_ROYSAMBU",
+  "code": "NAIROBI_ROYSAMBU_2"
+ },
+ {
+  "name": "Ruai",
+  "level": "Ward",
+  "lat": -1.25135,
+  "lon": 37.0102,
+  "parent": "NAIROBI_KASARANI",
+  "code": "NAIROBI_RUAI"
+ },
+ {
+  "name": "Sarangombe",
+  "level": "Ward",
+  "lat": -1.31399,
+  "lon": 36.7768,
+  "parent": "NAIROBI_KIBRA",
+  "code": "NAIROBI_SARANGOMBE"
+ },
+ {
+  "name": "South-C",
+  "level": "Ward",
+  "lat": -1.32231,
+  "lon": 36.83673,
+  "parent": "NAIROBI_LANGATA",
+  "code": "NAIROBI_SOUTH_C"
+ },
+ {
+  "name": "Umoja I",
+  "level": "Ward",
+  "lat": -1.28224,
+  "lon": 36.88764,
+  "parent": "NAIROBI_EMBAKASI_WEST",
+  "code": "NAIROBI_UMOJA_I"
+ },
+ {
+  "name": "Umoja II",
+  "level": "Ward",
+  "lat": -1.28496,
+  "lon": 36.89468,
+  "parent": "NAIROBI_EMBAKASI_WEST",
+  "code": "NAIROBI_UMOJA_II"
+ },
+ {
+  "name": "Upper Savannah",
+  "level": "Ward",
+  "lat": -1.28765,
+  "lon": 36.90689,
+  "parent": "NAIROBI_EMBAKASI_EAST",
+  "code": "NAIROBI_UPPER_SAVANNAH"
+ },
+ {
+  "name": "Utalii",
+  "level": "Ward",
+  "lat": -1.25628,
+  "lon": 36.86233,
+  "parent": "NAIROBI_RUARAKA",
+  "code": "NAIROBI_UTALII"
+ },
+ {
+  "name": "Utawala",
+  "level": "Ward",
+  "lat": -1.30797,
+  "lon": 36.89576,
+  "parent": "NAIROBI_EMBAKASI_EAST",
+  "code": "NAIROBI_UTAWALA"
+ },
+ {
+  "name": "Uthiru/Ruthimitu",
+  "level": "Ward",
+  "lat": -1.27567,
+  "lon": 36.70286,
+  "parent": "NAIROBI_DAGORETTI",
+  "code": "NAIROBI_UTHIRU_RUTHIMITU"
+ },
+ {
+  "name": "Viwandani",
+  "level": "Ward",
+  "lat": -1.30996,
+  "lon": 36.87003,
+  "parent": "NAIROBI_MAKADARA",
+  "code": "NAIROBI_VIWANDANI"
+ },
+ {
+  "name": "Waithaka",
+  "level": "Ward",
+  "lat": -1.28701,
+  "lon": 36.71775,
+  "parent": "NAIROBI_DAGORETTI",
+  "code": "NAIROBI_WAITHAKA"
+ },
+ {
+  "name": "Woodley/Kenyatta Golf",
+  "level": "Ward",
+  "lat": -1.30413,
+  "lon": 36.79755,
+  "parent": "NAIROBI_KIBRA",
+  "code": "NAIROBI_WOODLEY_KENYATTA_GOLF"
+ },
+ {
+  "name": "Zimmerman",
+  "level": "Ward",
+  "lat": -1.20097,
+  "lon": 36.87441,
+  "parent": "NAIROBI_ROYSAMBU",
+  "code": "NAIROBI_ZIMMERMAN"
+ },
+ {
+  "name": "Ziwani/Kariokor",
+  "level": "Ward",
+  "lat": -1.28201,
+  "lon": 36.83819,
+  "parent": "NAIROBI_STAREHE",
+  "code": "NAIROBI_ZIWANI_KARIOKOR"
+ }
+]

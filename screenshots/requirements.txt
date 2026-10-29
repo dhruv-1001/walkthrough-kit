@@ -1,0 +1,4 @@
+# playwright-scraper (MIT) draws the sitemap graph and the gallery; it is not on PyPI.
+playwright==1.59.0
+playwright-scraper @ git+https://github.com/ChakshuGautam/playwright-scraper.git
+PyYAML>=6

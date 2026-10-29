@@ -1,0 +1,12 @@
+{
+  "name": "walkthrough-videos",
+  "private": true,
+  "type": "module",
+  "description": "Narrated, captioned how-to videos of a web app, recorded with Playwright.",
+  "scripts": {
+    "record": "node record.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.59.1"
+  }
+}

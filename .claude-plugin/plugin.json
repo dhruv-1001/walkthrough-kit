@@ -1,0 +1,7 @@
+{
+  "name": "walkthrough-kit",
+  "version": "0.1.0",
+  "description": "Screenshot walkthroughs and narrated how-to videos of any web app, driven by Playwright.",
+  "author": { "name": "dhruv-1001" },
+  "repository": "https://github.com/dhruv-1001/walkthrough-kit"
+}
