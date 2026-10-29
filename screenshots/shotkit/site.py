@@ -92,9 +92,12 @@ def _real_captions(page: Path, manifest: dict) -> None:
 
 
 def _problems(shot: dict) -> list[str]:
-    out = [f"`{a['status']}` {a['method']} {a['url']}" for a in shot["api"]["failed"]]
-    out += [f"page error: {e}" for e in shot.get("errors", [])]
-    return out
+    """Each distinct failure once, with a count when the screen repeated it (retries, polling)."""
+    seen: dict[str, int] = {}
+    for line in [f"`{a['status']}` {a['method']} {a['url']}" for a in shot["api"]["failed"]] + \
+                [f"page error: {e}" for e in shot.get("errors", [])]:
+        seen[line] = seen.get(line, 0) + 1
+    return [f"{line} (×{n})" if n > 1 else line for line, n in seen.items()]
 
 
 def _markdown(manifest: dict, plan: Plan) -> str:
