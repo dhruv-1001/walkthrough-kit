@@ -190,6 +190,9 @@ capped at 3 GB. The recorder stops itself if free memory drops under 1.5 GB.
 - [`examples/demo`](examples/demo/): Brightdesk (start it with `node demo-app/server.mjs`). Three
   videos in two passes, rewound through the app's reset endpoint. The import scene uploads a CSV the
   `prepare` hook builds from `data.json`.
+- [`examples/saucedemo`](examples/saucedemo/): [saucedemo.com](https://www.saucedemo.com), a public
+  practice shop; nothing to start. Two videos (finding a product, checking out) from a 15-line
+  `project.mjs`: no stack, since a public site can't be rewound, and the defaults for passes.
 - [`examples/ccrs-configurator`](examples/ccrs-configurator/): the five CCRS onboarding videos.
   Magic-link sign-up through Mailpit, three passes (by hand, from spreadsheets, fetched boundaries),
   a local DIGIT stack rewound from Postgres template databases and restarted in dependency waves.

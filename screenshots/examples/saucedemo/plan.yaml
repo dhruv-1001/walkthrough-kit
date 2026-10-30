@@ -1,0 +1,91 @@
+# Swag Labs (https://www.saucedemo.com), the practice shop Sauce Labs runs for browser
+# automation: public test accounts, and no order is real. Nothing to start:
+#   ./shots run examples/saucedemo/plan.yaml
+name: Swag Labs
+base_url: ${SAUCE_URL:-https://www.saucedemo.com}
+viewport: {width: 1440, height: 900}
+settle_ms: 400
+
+# A site that isn't ours: block every write. Here the only writes are the site's own
+# error reports to backtrace.io, so the guard's list at the end is all of those.
+readonly:
+  methods: [POST, PUT, PATCH, DELETE]
+
+login:
+  steps:
+    - goto: /
+    - fill:
+        placeholder=Username: ${SAUCE_USER:-standard_user}
+        placeholder=Password: ${SAUCE_PASSWORD:-secret_sauce}
+    - click: "[data-test=login-button]"
+    - wait: {url: "**/inventory.html"}
+
+flows:
+  - id: 01_sign_in
+    title: Signing in
+    fresh: true
+    steps:
+      - goto: /
+      - shot: {name: sign_in, caption: "The sign-in page lists the test accounts and their shared password."}
+      - fill: {placeholder=Username: locked_out_user, placeholder=Password: secret_sauce}
+      - click: "[data-test=login-button]"
+      - shot: {name: locked_out, caption: "A locked-out account is turned away with a message."}
+
+  - id: 02_products
+    title: Products
+    steps:
+      - goto: /inventory.html
+      - shot: {name: products, caption: "Every product on one page, A to Z."}
+      - select: {"[data-test=product-sort-container]": Price (low to high)}
+      - shot: {name: by_price, caption: "Sorted by price, cheapest first."}
+      - open_first: "[data-test=inventory-item-name]"
+      - shot: {name: product, caption: "One product: description, price and Add to cart."}
+
+  - id: 03_checkout
+    title: Checking out
+    steps:
+      - goto: /inventory.html
+      - click: "[data-test=add-to-cart-sauce-labs-backpack]"
+      - click: "[data-test=add-to-cart-sauce-labs-bike-light]"
+      - shot: {name: two_added, caption: "Two items added: the cart icon counts them.", full_page: false}
+      - click: "[data-test=shopping-cart-link]"
+      - shot: {name: cart, caption: "The cart."}
+      - click: "[data-test=checkout]"
+      - click: "[data-test=continue]"
+      - shot: {name: details_missing, caption: "Continue with nothing filled in: the form says what is missing."}
+      - fill: {"[data-test=firstName]": Ada, "[data-test=lastName]": Okafor, "[data-test=postalCode]": SW1A 1AA}
+      - shot: {name: details, caption: "Name and postcode filled in."}
+      - click: "[data-test=continue]"
+      - shot: {name: overview, caption: "The overview: items, payment, delivery and the total with tax."}
+      - click: "[data-test=finish]"
+      - shot: {name: complete, caption: "Order placed. A practice shop: nothing is sent or charged."}
+
+  - id: 04_menu
+    title: The menu
+    steps:
+      - goto: /inventory.html
+      - click: "#react-burger-menu-btn"
+      - wait: 800                   # the menu slides in
+      - shot: {name: menu, caption: "The side menu.", full_page: false}
+
+  - id: 05_error_user
+    title: The same checkout, as error_user
+    fresh: true
+    description: >-
+      error_user is one of the site's test accounts, with bugs planted in it. Most screens look
+      normal; the page errors behind them are listed under "What looked broken" at the end.
+    steps:
+      - goto: /
+      - fill: {placeholder=Username: error_user, placeholder=Password: secret_sauce}
+      - click: "[data-test=login-button]"
+      - wait: {url: "**/inventory.html"}
+      - click: "[data-test=add-to-cart-sauce-labs-backpack]"
+      - click: "[data-test=add-to-cart-sauce-labs-bolt-t-shirt]"
+      - shot: {name: add_fails, caption: "Add to cart worked for the backpack but not the T-shirt: the cart counts one.", full_page: false}
+      - click: "[data-test=shopping-cart-link]"
+      - click: "[data-test=checkout]"
+      - fill: {"[data-test=firstName]": Ada, "[data-test=lastName]": Okafor, "[data-test=postalCode]": SW1A 1AA}
+      - shot: {name: last_name_empty, caption: "The last name was typed but stays empty."}
+      - click: "[data-test=continue]"
+      - click: "[data-test=finish]"
+      - shot: {name: finish_stuck, caption: "Finish does nothing: still on the overview."}

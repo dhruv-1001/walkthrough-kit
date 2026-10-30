@@ -9,9 +9,10 @@ Two tools that turn a running web app into documentation, by driving it in a rea
 | **Videos** | Narrated how-to videos: 1080p MP4 with burnt-in captions, a natural voice-over made locally (no cloud TTS) and an `.srt` file for YouTube. A visible cursor glides, clicks and types at reading pace, and server waits are cut out. | [`videos/`](videos/) |
 
 Both run against **any** web app: you describe your app in a plan (screenshots) or a small project
-folder (videos). Each comes with two examples: **Brightdesk**, a small helpdesk app bundled in
-[`demo-app/`](demo-app/) so everything works offline in a few minutes, and the **CCRS / DIGIT
-configurator**, the real project these tools were built for.
+folder (videos). Each comes with three examples: **Brightdesk**, a small helpdesk app bundled in
+[`demo-app/`](demo-app/) so everything works offline in a few minutes; **Swag Labs**
+([saucedemo.com](https://www.saucedemo.com)), a public practice shop, to see it on a live site with
+nothing to start; and the **CCRS / DIGIT configurator**, the real project these tools were built for.
 
 Both also come as **Claude Code skills** (see [`skills/`](skills/)), so Claude can write the plan
 or the scenes for a new app, run them, look at the result and fix what's off.
@@ -45,6 +46,20 @@ videos/redo.sh --project examples/demo                      # 3 videos, ~3 min
 ```
 
 (`shots` and `redo.sh` resolve `examples/...` against their own folder, so they work from anywhere.)
+
+### On a public site
+
+Nothing to start: both tools point at [saucedemo.com](https://www.saucedemo.com), a shop Sauce Labs
+runs for practising browser automation (public test accounts, no real orders).
+
+```bash
+screenshots/shots run examples/saucedemo/plan.yaml          # 15 screens, ~1 min
+videos/redo.sh --project examples/saucedemo                 # 2 videos, ~2 min
+```
+
+The screenshots include one flow signed in as `error_user`, an account with bugs planted in it: the
+screens look almost normal, and `walkthrough.md` ends with the three page errors behind them. The
+read-only guard blocks the site's error reports to backtrace.io, its only writes.
 
 ---
 
@@ -135,11 +150,13 @@ screenshots/
   shots, shots.py         the CLI: check · discover · capture · build · run
   shotkit/                plan loader, read-only guard, capture runner, site builder
   examples/demo/          plan for Brightdesk
+  examples/saucedemo/     plan for a public site, saucedemo.com (one flow catches planted bugs)
   examples/ccrs-configurator/   plan + hooks for the DIGIT configurator (Keycloak sign-in, 40 screens)
 videos/
   record.mjs, redo.sh     the recorder
   lib/                    screen recorder, cursor + human-paced actions, captions, voice (Kokoro), Whisper check
   examples/demo/          3 videos of Brightdesk, 2 passes
+  examples/saucedemo/     2 videos of a public site: no stack, defaults for everything else
   examples/ccrs-configurator/   the 5 CCRS onboarding videos, 3 passes, Postgres-snapshot rewind
 skills/                   the Claude Code skills
 .claude-plugin/           plugin + marketplace manifest

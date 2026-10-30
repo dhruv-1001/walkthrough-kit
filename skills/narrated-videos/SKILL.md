@@ -7,7 +7,8 @@ description: Record narrated, captioned how-to videos of a web app (1080p MP4 wi
 
 The tool lives in the kit at `${CLAUDE_SKILL_DIR}/../../videos` (call it `$VIDEOS`). Read
 `${CLAUDE_SKILL_DIR}/../../videos/README.md` for the full scene API before writing scenes. Copy
-`$VIDEOS/examples/demo` as the starting point of a new project. Look at
+`$VIDEOS/examples/demo` as the starting point of a new project, or `$VIDEOS/examples/saucedemo`
+for a public site you can't rewind (no stack). Look at
 `$VIDEOS/examples/ccrs-configurator` for a large real one (sign-up by emailed link, three
 passes, a database rewind).
 

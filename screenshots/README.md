@@ -168,6 +168,10 @@ vis-network from unpkg; the gallery and the markdown need nothing.
 - [`examples/demo`](examples/demo/plan.yaml): Brightdesk (start it with `node demo-app/server.mjs`).
   Sign-in and a refused password from a signed-out browser, the dashboard, a filled form whose save
   the guard blocks, a CSV import preview, settings.
+- [`examples/saucedemo`](examples/saucedemo/plan.yaml): [saucedemo.com](https://www.saucedemo.com), a
+  public practice shop; nothing to start. Sign-in and a locked-out account, products and sorting,
+  a full checkout, and the same checkout as `error_user`, whose planted bugs land under "What looked
+  broken". The guard blocks the site's only writes: its error reports to backtrace.io.
 - [`examples/ccrs-configurator`](examples/ccrs-configurator/): the DIGIT configurator. Keycloak
   username-first sign-in, a workspace chooser (hook), the account pages and all 32 Management
   Studio routes, under a guard tuned for DIGIT's POST-based reads.

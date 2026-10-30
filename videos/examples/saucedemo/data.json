@@ -1,0 +1,9 @@
+{
+  "baseUrl": "https://www.saucedemo.com",
+  "user": { "name": "standard_user", "password": "secret_sauce" },
+  "sort": { "label": "Price (low to high)", "said": "cheapest first" },
+  "product": "Sauce Labs Bike Light",
+  "cart": ["Sauce Labs Backpack", "Sauce Labs Bolt T-Shirt"],
+  "customer": { "firstName": "Ada", "lastName": "Okafor", "postcode": "SW1A 1AA" },
+  "voice": { "id": "af_heart", "speed": 1, "lexicon": {} }
+}

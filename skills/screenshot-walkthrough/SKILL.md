@@ -7,7 +7,9 @@ description: Capture a screen-by-screen screenshot walkthrough of a web app (sit
 
 The tool lives in the kit at `${CLAUDE_SKILL_DIR}/../../screenshots` (call it `$SHOTS`). Its
 README is the full reference; read it before writing an unusual plan:
-`${CLAUDE_SKILL_DIR}/../../screenshots/README.md`.
+`${CLAUDE_SKILL_DIR}/../../screenshots/README.md`. Example plans to copy from, in
+`$SHOTS/examples/`: `demo` (a local app), `saucedemo` (a public site, test accounts) and
+`ccrs-configurator` (Keycloak sign-in, Python hooks).
 
 ## 1. Set up (once)
 

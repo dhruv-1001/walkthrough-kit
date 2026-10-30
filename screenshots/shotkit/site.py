@@ -91,13 +91,17 @@ def _real_captions(page: Path, manifest: dict) -> None:
     page.write_text(text)
 
 
-def _problems(shot: dict) -> list[str]:
-    """Each distinct failure once, with a count when the screen repeated it (retries, polling)."""
+def _fold(lines: list[str]) -> list[str]:
+    """Each distinct line once, with a count when it repeated (retries, polling, telemetry)."""
     seen: dict[str, int] = {}
-    for line in [f"`{a['status']}` {a['method']} {a['url']}" for a in shot["api"]["failed"]] + \
-                [f"page error: {e}" for e in shot.get("errors", [])]:
+    for line in lines:
         seen[line] = seen.get(line, 0) + 1
     return [f"{line} (×{n})" if n > 1 else line for line, n in seen.items()]
+
+
+def _problems(shot: dict) -> list[str]:
+    return _fold([f"`{a['status']}` {a['method']} {a['url']}" for a in shot["api"]["failed"]] +
+                 [f"page error: {e}" for e in shot.get("errors", [])])
 
 
 def _markdown(manifest: dict, plan: Plan) -> str:
@@ -128,7 +132,7 @@ def _markdown(manifest: dict, plan: Plan) -> str:
     lines += ["", "## What looked broken", ""]
     lines += issues or ["Nothing: no failed API call or page error on any captured screen."]
     if manifest.get("blocked"):
-        lines += ["", "## Blocked by the read-only guard", ""] + [f"- `{b}`" for b in manifest["blocked"]]
+        lines += ["", "## Blocked by the read-only guard", ""] + [f"- {b}" for b in _fold([f"`{b}`" for b in manifest["blocked"]])]
     return "\n".join(lines) + "\n"
 
 
