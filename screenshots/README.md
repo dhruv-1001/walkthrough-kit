@@ -171,7 +171,8 @@ vis-network from unpkg; the gallery and the markdown need nothing.
 - [`examples/saucedemo`](examples/saucedemo/plan.yaml): [saucedemo.com](https://www.saucedemo.com), a
   public practice shop; nothing to start. Sign-in and a locked-out account, products and sorting,
   a full checkout, and the same checkout as `error_user`, whose planted bugs land under "What looked
-  broken". The guard blocks the site's only writes: its error reports to backtrace.io.
+  broken". The guard blocks the site's only writes: its error reports to backtrace.io. A run's
+  output is committed in [`examples/saucedemo/sample/`](examples/saucedemo/sample/walkthrough.md).
 - [`examples/ccrs-configurator`](examples/ccrs-configurator/): the DIGIT configurator. Keycloak
   username-first sign-in, a workspace chooser (hook), the account pages and all 32 Management
   Studio routes, under a guard tuned for DIGIT's POST-based reads.

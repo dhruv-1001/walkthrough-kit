@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:02,199
+Finding a product
+
+2
+00:00:02,199 --> 00:00:06,581
+Sign in with your username and password.
+
+3
+00:00:06,581 --> 00:00:10,651
+Every product is on one page, with its price.
+
+4
+00:00:10,651 --> 00:00:14,971
+Sort the list to find what you want: here, cheapest first.
+
+5
+00:00:14,971 --> 00:00:20,340
+Open a product to read more about it.
+
+6
+00:00:20,340 --> 00:00:25,945
+Add it to your cart from here, or go back to the list.
+
+7
+00:00:25,945 --> 00:00:28,665
+That’s all there is to it.

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Swag Labs walkthrough</title>
+<style>
+  :root{--bg:#0b1020;--card:#151c30;--ink:#e8edf7;--mut:#9fb0d0;--accent:#2f6fdb;--line:#26304a;}
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  header.top{padding:26px 32px 14px;border-bottom:3px solid var(--accent);}
+  header.top h1{margin:0 0 4px;font-size:23px;}
+  header.top p{margin:0;color:var(--mut);}
+  .barrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px;}
+  .toggle{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+  .toggle button{background:transparent;color:var(--mut);border:0;padding:7px 18px;font-size:13px;cursor:pointer;}
+  .toggle button.active{background:var(--accent);color:#04130a;font-weight:600;}
+  a.map{color:var(--accent);text-decoration:none;font-size:13px;border:1px solid var(--line);padding:7px 13px;border-radius:8px;}
+  a.map:hover{border-color:var(--accent);}
+  nav.flows{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;padding:11px 32px;
+    background:rgba(11,16,32,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+  nav.flows a{color:var(--mut);text-decoration:none;font-size:12.5px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;white-space:nowrap;}
+  nav.flows a:hover{color:#fff;border-color:var(--accent);background:#13351f;}
+  main{padding:8px 32px 64px;}
+  section{padding:24px 0 8px;border-bottom:1px solid var(--line);scroll-margin-top:58px;}
+  section h2{font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .count{font-size:12px;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:999px;}
+  .empty{color:var(--mut);font-size:13px;font-style:italic;padding:6px 0 14px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:12px;}
+  figure.shot{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  figure.shot img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover;object-position:top;background:#fff;cursor:zoom-in;}
+  figcaption{padding:9px 11px;font-size:12.5px;color:var(--mut);}
+  figcaption b{color:var(--ink);}
+  #lb{position:fixed;inset:0;background:rgba(4,7,16,.92);display:none;align-items:center;justify-content:center;z-index:40;}
+  #lb.open{display:flex;} #lb img{max-width:95%;max-height:92vh;border:1px solid var(--line);border-radius:8px;background:#fff;}
+  footer{padding:28px 32px;color:var(--mut);font-size:12px;}
+</style></head>
+<body>
+<header class="top">
+  <h1>Swag Labs walkthrough</h1>
+  <p>15 screens captured from https://www.saucedemo.com on 2026-10-30 12:31 IST. &mdash; <span id="counts"></span></p>
+  <div class="barrow">
+    
+    <a class="map" href="index.html">&#9783; Sitemap graph &rarr;</a>
+  </div>
+</header>
+<nav class="flows"><a href="#f_01_sign_in">Signing in</a><a href="#f_02_products">Products</a><a href="#f_03_checkout">Checking out</a><a href="#f_04_menu">The menu</a><a href="#f_05_error_user">The same checkout, as error_user</a></nav>
+<main id="main"></main>
+<footer>Click any screenshot to zoom. Captured read-only: nothing was created, changed or deleted.</footer>
+<div id="lb" onclick="this.classList.remove('open')"><img id="lbimg" src=""></div>
+
+<script>
+const FLOWS = [{"anchor": "f_01_sign_in", "title": "Signing in", "shots": {"en": [{"src": "01_sign_in/01_sign_in.png", "cap": "The sign-in page lists the test accounts and their shared password."}, {"src": "01_sign_in/02_locked_out.png", "cap": "A locked-out account is turned away with a message."}]}}, {"anchor": "f_02_products", "title": "Products", "shots": {"en": [{"src": "02_products/01_products.png", "cap": "Every product on one page, A to Z."}, {"src": "02_products/02_by_price.png", "cap": "Sorted by price, cheapest first."}, {"src": "02_products/03_product.png", "cap": "One product: description, price and Add to cart."}]}}, {"anchor": "f_03_checkout", "title": "Checking out", "shots": {"en": [{"src": "03_checkout/01_two_added.png", "cap": "Two items added: the cart icon counts them."}, {"src": "03_checkout/02_cart.png", "cap": "The cart."}, {"src": "03_checkout/03_details_missing.png", "cap": "Continue with nothing filled in: the form says what is missing."}, {"src": "03_checkout/04_details.png", "cap": "Name and postcode filled in."}, {"src": "03_checkout/05_overview.png", "cap": "The overview: items, payment, delivery and the total with tax."}, {"src": "03_checkout/06_complete.png", "cap": "Order placed. A practice shop: nothing is sent or charged."}]}}, {"anchor": "f_04_menu", "title": "The menu", "shots": {"en": [{"src": "04_menu/01_menu.png", "cap": "The side menu."}]}}, {"anchor": "f_05_error_user", "title": "The same checkout, as error_user", "shots": {"en": [{"src": "05_error_user/01_add_fails.png", "cap": "Add to cart worked for the backpack but not the T-shirt: the cart counts one."}, {"src": "05_error_user/02_last_name_empty.png", "cap": "The last name was typed but stays empty."}, {"src": "05_error_user/03_finish_stuck.png", "cap": "Finish does nothing: still on the overview."}]}}];
+const LANGS = [["en", "EN"]];
+const LANG_URLS = {};
+let lang = "en";
+
+function render(){
+  const main = document.getElementById("main");
+  main.innerHTML = FLOWS.map(f => {
+    const shots = f.shots[lang] || [];
+    const cards = shots.length ? shots.map((s,i) =>
+      `<figure class="shot"><img loading="lazy" src="${s.src}" onclick="zoom('${s.src}')" alt="">`+
+      `<figcaption><b>${String(i+1).padStart(2,'0')}.</b> ${s.cap}</figcaption></figure>`).join("")
+      : "";
+    const body = shots.length ? `<div class="grid">${cards}</div>`
+      : `<div class="empty">No ${lang.toUpperCase()} capture for this flow.</div>`;
+    return `<section id="${f.anchor}"><h2>${f.title} <span class="count">${shots.length} ${lang.toUpperCase()} shots</span></h2>${body}</section>`;
+  }).join("");
+  const parts = LANGS.map(([c]) =>
+    FLOWS.reduce((a,f)=>a+(f.shots[c]||[]).length,0) + " " + c.toUpperCase());
+  document.getElementById("counts").textContent = `${parts.join(" · ")} screenshots across ${FLOWS.length} flows`;
+}
+function zoom(src){ const lb=document.getElementById("lb"); document.getElementById("lbimg").src=src; lb.classList.add("open"); }
+function setLang(l){ lang=l;
+  document.querySelectorAll(".toggle button").forEach(b=>b.classList.toggle("active", b.dataset.lang===l));
+  render();
+  if(LANG_URLS[l]){ try{ history.replaceState(null,'', LANG_URLS[l]); }catch(e){} } }
+document.querySelectorAll(".toggle button").forEach(b=>{ b.onclick=()=>setLang(b.dataset.lang); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.getElementById("lb").classList.remove("open"); });
+render();
+</script>
+</body></html>

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sitemap · Swag Labs walkthrough</title>
+<script src="https://unpkg.com/vis-network@10.1.0/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root{--bg:#0b1020;--panel:#121a2e;--ink:#e8edf7;--mut:#9fb0d0;--line:#26304a;--accent:#2f6fdb;}
+  *{box-sizing:border-box;} html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  header h1{font-size:17px;margin:0;}
+  header .sub{color:var(--mut);font-size:12.5px;}
+  .spacer{flex:1;}
+  .toggle{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+  .toggle button{background:transparent;color:var(--mut);border:0;padding:7px 16px;font-size:13px;cursor:pointer;}
+  .toggle button.active{background:var(--accent);color:#04130a;font-weight:600;}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mut);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  a.gallery{color:var(--accent);text-decoration:none;font-size:12.5px;border:1px solid var(--line);padding:6px 12px;border-radius:8px;}
+  a.gallery:hover{border-color:var(--accent);}
+  #net{width:100%;height:calc(100vh - 120px);}
+  /* lightbox */
+  #lb{position:fixed;inset:0;background:rgba(4,7,16,.92);display:none;z-index:50;flex-direction:column;}
+  #lb.open{display:flex;}
+  #lb .bar{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);}
+  #lb .bar b{font-size:15px;} #lb .bar .meta{color:var(--mut);font-size:12.5px;}
+  #lb .zoomctl{margin-left:auto;display:flex;align-items:center;gap:4px;}
+  #lb .zoomctl button{background:#1b2438;color:var(--ink);border:1px solid var(--line);border-radius:6px;cursor:pointer;font-size:14px;min-width:30px;height:28px;padding:0 8px;}
+  #lb .zoomctl button:hover{border-color:var(--accent);}
+  #lb .zoomctl #zlabel{min-width:50px;font-size:12.5px;color:var(--mut);background:none;border:0;}
+  #lb .bar .x{margin-left:14px;cursor:pointer;font-size:22px;color:var(--mut);background:none;border:0;}
+  #lb .stage{flex:1;display:flex;align-items:safe center;justify-content:safe center;overflow:auto;padding:16px;}
+  #lb img{max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:zoom-in;user-select:none;-webkit-user-drag:none;flex-shrink:0;}
+  #lb .nav{position:absolute;top:50%;transform:translateY(-50%);font-size:40px;color:#fff;background:rgba(0,0,0,.35);
+           border:0;cursor:pointer;padding:6px 16px;border-radius:8px;}
+  #lb .prev{left:14px;} #lb .next{right:14px;}
+  #lb .count{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:var(--mut);font-size:12.5px;}
+</style></head>
+<body>
+<header>
+  <div>
+    <h1>Swag Labs <span style="color:var(--mut)">· https://www.saucedemo.com</span></h1>
+    <div class="sub">15/15 screens captured · click a node to zoom its screenshots</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="legend"><span><i class="dot" style="background:#2f6fdb"></i>Signing in</span><span><i class="dot" style="background:#8b5cf6"></i>Products</span><span><i class="dot" style="background:#3fae6b"></i>Checking out</span><span><i class="dot" style="background:#d8973c"></i>The menu</span><span><i class="dot" style="background:#2bb3a3"></i>The same checkout, as error_user</span></div>
+  
+  <a class="gallery" href="gallery.html">Grid gallery &rarr;</a><a class="gallery" href="walkthrough.md">Markdown</a>
+</header>
+<div id="net"></div>
+
+<div id="lb">
+  <div class="bar"><b id="lbTitle"></b><span class="meta" id="lbMeta"></span>
+    <div class="zoomctl">
+      <button onclick="zoomBy(-1)" title="Zoom out (−)">−</button>
+      <button id="zlabel" onclick="zoomToggle()" title="Toggle fit / 100% — or click the image">Fit</button>
+      <button onclick="zoomBy(1)" title="Zoom in (+)">+</button>
+    </div>
+    <button class="x" onclick="closeLb()" title="Close (Esc)">✕</button></div>
+  <div class="stage">
+    <button class="nav prev" onclick="step(-1)">‹</button>
+    <img id="lbImg" src="">
+    <button class="nav next" onclick="step(1)">›</button>
+    <div class="count" id="lbCount"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {"nodes": [{"id": "01_sign_in/sign_in", "label": "Sign in", "level": 0, "group": "01_sign_in", "imgs": {"en": "01_sign_in/01_sign_in.png"}, "color": "#2f6fdb", "captured": true}, {"id": "01_sign_in/locked_out", "label": "Locked out", "level": 0, "group": "01_sign_in", "imgs": {"en": "01_sign_in/02_locked_out.png"}, "color": "#2f6fdb", "captured": true}, {"id": "02_products/products", "label": "Products", "level": 1, "group": "02_products", "imgs": {"en": "02_products/01_products.png"}, "color": "#8b5cf6", "captured": true}, {"id": "02_products/by_price", "label": "By price", "level": 1, "group": "02_products", "imgs": {"en": "02_products/02_by_price.png"}, "color": "#8b5cf6", "captured": true}, {"id": "02_products/product", "label": "Product", "level": 1, "group": "02_products", "imgs": {"en": "02_products/03_product.png"}, "color": "#8b5cf6", "captured": true}, {"id": "03_checkout/two_added", "label": "Two added", "level": 2, "group": "03_checkout", "imgs": {"en": "03_checkout/01_two_added.png"}, "color": "#3fae6b", "captured": true}, {"id": "03_checkout/cart", "label": "Cart", "level": 2, "group": "03_checkout", "imgs": {"en": "03_checkout/02_cart.png"}, "color": "#3fae6b", "captured": true}, {"id": "03_checkout/details_missing", "label": "Details missing", "level": 2, "group": "03_checkout", "imgs": {"en": "03_checkout/03_details_missing.png"}, "color": "#3fae6b", "captured": true}, {"id": "03_checkout/details", "label": "Details", "level": 2, "group": "03_checkout", "imgs": {"en": "03_checkout/04_details.png"}, "color": "#3fae6b", "captured": true}, {"id": "03_checkout/overview", "label": "Overview", "level": 2, "group": "03_checkout", "imgs": {"en": "03_checkout/05_overview.png"}, "color": "#3fae6b", "captured": true}, {"id": "03_checkout/complete", "label": "Complete", "level": 2, "group": "03_checkout", "imgs": {"en": "03_checkout/06_complete.png"}, "color": "#3fae6b", "captured": true}, {"id": "04_menu/menu", "label": "Menu", "level": 3, "group": "04_menu", "imgs": {"en": "04_menu/01_menu.png"}, "color": "#d8973c", "captured": true}, {"id": "05_error_user/add_fails", "label": "Add fails", "level": 4, "group": "05_error_user", "imgs": {"en": "05_error_user/01_add_fails.png"}, "color": "#2bb3a3", "captured": true}, {"id": "05_error_user/last_name_empty", "label": "Last name empty", "level": 4, "group": "05_error_user", "imgs": {"en": "05_error_user/02_last_name_empty.png"}, "color": "#2bb3a3", "captured": true}, {"id": "05_error_user/finish_stuck", "label": "Finish stuck", "level": 4, "group": "05_error_user", "imgs": {"en": "05_error_user/03_finish_stuck.png"}, "color": "#2bb3a3", "captured": true}], "edges": [{"from": "01_sign_in/sign_in", "to": "01_sign_in/locked_out", "label": "click [data-test=login-button]"}, {"from": "02_products/products", "to": "02_products/by_price", "label": ""}, {"from": "02_products/by_price", "to": "02_products/product", "label": "open the first row"}, {"from": "03_checkout/two_added", "to": "03_checkout/cart", "label": "click [data-test=shopping-cart-l"}, {"from": "03_checkout/cart", "to": "03_checkout/details_missing", "label": "click [data-test=continue]"}, {"from": "03_checkout/details_missing", "to": "03_checkout/details", "label": ""}, {"from": "03_checkout/details", "to": "03_checkout/overview", "label": "click [data-test=continue]"}, {"from": "03_checkout/overview", "to": "03_checkout/complete", "label": "click [data-test=finish]"}, {"from": "05_error_user/add_fails", "to": "05_error_user/last_name_empty", "label": "click [data-test=checkout]"}, {"from": "05_error_user/last_name_empty", "to": "05_error_user/finish_stuck", "label": "click [data-test=finish]"}], "shots": {"01_sign_in/sign_in": {"shots": {"en": ["01_sign_in/01_sign_in.png"]}, "caption": "The sign-in page lists the test accounts and their shared password."}, "01_sign_in/locked_out": {"shots": {"en": ["01_sign_in/02_locked_out.png"]}, "caption": "A locked-out account is turned away with a message."}, "02_products/products": {"shots": {"en": ["02_products/01_products.png"]}, "caption": "Every product on one page, A to Z."}, "02_products/by_price": {"shots": {"en": ["02_products/02_by_price.png"]}, "caption": "Sorted by price, cheapest first."}, "02_products/product": {"shots": {"en": ["02_products/03_product.png"]}, "caption": "One product: description, price and Add to cart."}, "03_checkout/two_added": {"shots": {"en": ["03_checkout/01_two_added.png"]}, "caption": "Two items added: the cart icon counts them."}, "03_checkout/cart": {"shots": {"en": ["03_checkout/02_cart.png"]}, "caption": "The cart."}, "03_checkout/details_missing": {"shots": {"en": ["03_checkout/03_details_missing.png"]}, "caption": "Continue with nothing filled in: the form says what is missing."}, "03_checkout/details": {"shots": {"en": ["03_checkout/04_details.png"]}, "caption": "Name and postcode filled in."}, "03_checkout/overview": {"shots": {"en": ["03_checkout/05_overview.png"]}, "caption": "The overview: items, payment, delivery and the total with tax."}, "03_checkout/complete": {"shots": {"en": ["03_checkout/06_complete.png"]}, "caption": "Order placed. A practice shop: nothing is sent or charged."}, "04_menu/menu": {"shots": {"en": ["04_menu/01_menu.png"]}, "caption": "The side menu."}, "05_error_user/add_fails": {"shots": {"en": ["05_error_user/01_add_fails.png"]}, "caption": "Add to cart worked for the backpack but not the T-shirt: the cart counts one."}, "05_error_user/last_name_empty": {"shots": {"en": ["05_error_user/02_last_name_empty.png"]}, "caption": "The last name was typed but stays empty."}, "05_error_user/finish_stuck": {"shots": {"en": ["05_error_user/03_finish_stuck.png"]}, "caption": "Finish does nothing: still on the overview."}}};
+const LANGS = [["en", "EN"]];
+const LANG_URLS = {};
+const STR = {"subtitle": "{captured}/{total} screens captured \u00b7 click a node to zoom its screenshots", "no_capture": "no capture", "alt_lang": "(other language)", "none": "no capture available"};
+let lang = "en";
+
+const GRAY = "data:image/svg+xml;utf8," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150"><rect width="100%" height="100%" fill="#1b2438"/>'+
+  '<text x="50%" y="50%" fill="#5b6b8c" font-family="sans-serif" font-size="13" text-anchor="middle" dy=".3em">'+STR.no_capture+'</text></svg>'
+);
+
+function imgFor(n){ const p=n.imgs[lang]; return p ? "_thumbs/"+p : GRAY; }
+
+const visNodes = new vis.DataSet(DATA.nodes.map(n => ({
+  id:n.id, label:n.label, level:n.level,
+  shape:"image", image:imgFor(n),
+  brokenImage:GRAY,
+  size:34,
+  font:{color:"#e8edf7", size:13, multi:false, vadjust:4, face:"-apple-system,Segoe UI,Roboto"},
+  borderWidth:3, color:{border:n.captured? n.color : "#3a4660", background:"#121a2e"},
+  shapeProperties:{useBorderWithImage:true},
+  opacity: n.captured? 1 : 0.45,
+})));
+
+const visEdges = new vis.DataSet(DATA.edges.map((e,i)=>({
+  id:"e"+i, from:e.from, to:e.to, label:e.label||undefined,
+  arrows:{to:{enabled:true,scaleFactor:0.6}},
+  color:{color:"#3a4660",highlight:"#2f6fdb"},
+  font:{color:"#7f8db0",size:10,strokeWidth:0,align:"middle"},
+  smooth:{type:"cubicBezier",forceDirection:"vertical",roundness:0.45},
+})));
+
+const container = document.getElementById("net");
+const network = new vis.Network(container, {nodes:visNodes, edges:visEdges}, {
+  layout:{hierarchical:{enabled:true,direction:"UD",sortMethod:"directed",levelSeparation:150,nodeSpacing:190,treeSpacing:230}},
+  physics:false,
+  interaction:{hover:true,zoomView:true,dragView:true,tooltipDelay:120},
+  nodes:{labelHighlightBold:false},
+});
+
+network.on("click", params => {
+  if(params.nodes.length){ openLb(params.nodes[0]); }
+});
+
+// ---- lightbox ----
+let curNode=null, curShots=[], curIdx=0;
+function shotsFor(id, l){ const s=(DATA.shots[id]||{}).shots||{}; return s[l]||[]; }
+function openLb(id){
+  curNode=id; curShots=shotsFor(id, lang); curIdx=0;
+  const node = DATA.nodes.find(n=>n.id===id);
+  document.getElementById("lbTitle").textContent = node? node.label : id;
+  if(!curShots.length){
+    // fallback to any other language that has captures
+    for(const [code] of LANGS){
+      if(code!==lang && shotsFor(id, code).length){ curShots = shotsFor(id, code); break; }
+    }
+    document.getElementById("lbMeta").textContent = curShots.length? STR.alt_lang : STR.none;
+  } else {
+    document.getElementById("lbMeta").textContent = "("+lang.toUpperCase()+")";
+  }
+  render();
+  document.getElementById("lb").classList.add("open");
+}
+function shotName(p){ return p.split("/").pop().replace(/\.png$/,"").replace(/^\d+_/,"").replace(/_/g," "); }
+function render(){
+  const img=document.getElementById("lbImg");
+  zoom=0;                                   // reset zoom on each new shot
+  if(curShots.length){ img.src=curShots[curIdx]; img.style.display="block"; applyZoom(); }
+  else { img.style.display="none"; }
+  const nm = curShots.length? shotName(curShots[curIdx]) : "";
+  const counter = curShots.length>1 ? (curIdx+1)+" / "+curShots.length+"  ·  " : "";
+  document.getElementById("lbCount").textContent = counter + nm;
+}
+function step(d){ if(!curShots.length) return; curIdx=(curIdx+d+curShots.length)%curShots.length; render(); }
+function closeLb(){ document.getElementById("lb").classList.remove("open"); }
+
+// ---- zoom ----
+let zoom=0; const ZLVL=[0,1,1.5,2,3];       // 0 = fit-to-screen; else multiplier of natural pixels
+function applyZoom(){
+  const img=document.getElementById("lbImg");
+  if(zoom===0){ img.style.maxWidth="100%"; img.style.maxHeight="none"; img.style.width="auto"; img.style.height="auto"; img.style.cursor="zoom-in"; }
+  else { img.style.maxWidth="none"; img.style.maxHeight="none"; img.style.height="auto";
+         img.style.width=(img.naturalWidth*ZLVL[zoom])+"px"; img.style.cursor="grab"; }
+  document.getElementById("zlabel").textContent = zoom===0 ? "Fit" : Math.round(ZLVL[zoom]*100)+"%";
+}
+function zoomBy(d){ zoom=Math.max(0,Math.min(ZLVL.length-1, zoom+d)); applyZoom(); }
+function zoomToggle(){ zoom = zoom===0 ? 1 : 0; applyZoom(); }
+
+// click image toggles fit/100% (unless it was a pan-drag); drag pans when zoomed
+(function(){
+  const img=document.getElementById("lbImg");
+  const stage=document.querySelector("#lb .stage");
+  let pan=null, moved=false;
+  img.addEventListener("mousedown", e=>{ if(zoom===0){return;} pan={x:e.clientX,y:e.clientY,l:stage.scrollLeft,t:stage.scrollTop}; moved=false; img.style.cursor="grabbing"; e.preventDefault(); });
+  window.addEventListener("mousemove", e=>{ if(!pan)return; if(Math.abs(e.clientX-pan.x)+Math.abs(e.clientY-pan.y)>3) moved=true; stage.scrollLeft=pan.l-(e.clientX-pan.x); stage.scrollTop=pan.t-(e.clientY-pan.y); });
+  window.addEventListener("mouseup", ()=>{ if(pan){ pan=null; img.style.cursor="grab"; } });
+  img.addEventListener("click", e=>{ if(moved){ moved=false; return; } zoomToggle(); });
+})();
+
+document.addEventListener("keydown",e=>{
+  if(!document.getElementById("lb").classList.contains("open")) return;
+  if(e.key==="Escape") closeLb();
+  else if(e.key==="ArrowRight") step(1);
+  else if(e.key==="ArrowLeft") step(-1);
+  else if(e.key==="+"||e.key==="=") zoomBy(1);
+  else if(e.key==="-"||e.key==="_") zoomBy(-1);
+  else if(e.key==="0") { zoom=0; applyZoom(); }
+});
+
+// ---- language toggle ----
+function setLang(l){
+  lang=l;
+  document.querySelectorAll(".toggle button").forEach(b=>b.classList.toggle("active", b.dataset.lang===l));
+  DATA.nodes.forEach(n=> visNodes.update({id:n.id, image:imgFor(n)}));
+  if(document.getElementById("lb").classList.contains("open") && curNode){ openLb(curNode); }
+  if(LANG_URLS[l]){ try{ history.replaceState(null,'', LANG_URLS[l]); }catch(e){} }
+}
+document.querySelectorAll(".toggle button").forEach(b=>{ b.onclick=()=>setLang(b.dataset.lang); });
+
+network.once("afterDrawing",()=>network.fit({animation:false}));
+</script>
+</body></html>

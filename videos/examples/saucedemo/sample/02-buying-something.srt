@@ -1,0 +1,35 @@
+1
+00:00:00,000 --> 00:00:02,200
+Buying something
+
+2
+00:00:02,200 --> 00:00:05,240
+Add what you want to your cart.
+
+3
+00:00:05,240 --> 00:00:10,203
+The cart icon counts what you’ve added. Open it to check.
+
+4
+00:00:10,203 --> 00:00:15,169
+Here’s everything in your cart. When it looks right, check out.
+
+5
+00:00:15,169 --> 00:00:21,019
+Enter your name and postcode.
+
+6
+00:00:21,019 --> 00:00:25,979
+The overview shows how you’ll pay, the delivery, and the total with tax.
+
+7
+00:00:25,979 --> 00:00:28,822
+Finish places the order.
+
+8
+00:00:28,822 --> 00:00:33,781
+Done. This is a practice shop, so nothing is really sent or charged.
+
+9
+00:00:33,781 --> 00:00:36,500
+That’s all there is to it.

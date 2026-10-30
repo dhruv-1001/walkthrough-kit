@@ -1,0 +1,290 @@
+{
+  "name": "Swag Labs",
+  "base_url": "https://www.saucedemo.com",
+  "captured_at": "2026-10-30 12:31 IST",
+  "readonly": {
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ],
+    "paths": [],
+    "allow": []
+  },
+  "blocked": [
+    "POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+    "POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+    "POST https://submit.backtrace.io/UNIVERSE/TOKEN/json",
+    "POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+    "POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+    "POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+    "POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+    "POST https://submit.backtrace.io/UNIVERSE/TOKEN/json",
+    "POST https://submit.backtrace.io/UNIVERSE/TOKEN/json",
+    "POST https://submit.backtrace.io/UNIVERSE/TOKEN/json"
+  ],
+  "flows": [
+    {
+      "id": "01_sign_in",
+      "title": "Signing in",
+      "description": "",
+      "fresh": true,
+      "shots": [
+        {
+          "file": "01_sign_in/01_sign_in.png",
+          "name": "sign_in",
+          "caption": "The sign-in page lists the test accounts and their shared password.",
+          "url": "https://www.saucedemo.com/",
+          "title": "Swag Labs",
+          "via": "go to /",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "01_sign_in/02_locked_out.png",
+          "name": "locked_out",
+          "caption": "A locked-out account is turned away with a message.",
+          "url": "https://www.saucedemo.com/",
+          "title": "Swag Labs",
+          "via": "click [data-test=login-button]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "02_products",
+      "title": "Products",
+      "description": "",
+      "fresh": false,
+      "shots": [
+        {
+          "file": "02_products/01_products.png",
+          "name": "products",
+          "caption": "Every product on one page, A to Z.",
+          "url": "https://www.saucedemo.com/inventory.html",
+          "title": "Swag Labs",
+          "via": "go to /inventory.html",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "02_products/02_by_price.png",
+          "name": "by_price",
+          "caption": "Sorted by price, cheapest first.",
+          "url": "https://www.saucedemo.com/inventory.html",
+          "title": "Swag Labs",
+          "via": null,
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "02_products/03_product.png",
+          "name": "product",
+          "caption": "One product: description, price and Add to cart.",
+          "url": "https://www.saucedemo.com/inventory-item.html?id=2",
+          "title": "Swag Labs",
+          "via": "open the first row",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "03_checkout",
+      "title": "Checking out",
+      "description": "",
+      "fresh": false,
+      "shots": [
+        {
+          "file": "03_checkout/01_two_added.png",
+          "name": "two_added",
+          "caption": "Two items added: the cart icon counts them.",
+          "url": "https://www.saucedemo.com/inventory.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=add-to-cart-sauce-labs-bike-light]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "03_checkout/02_cart.png",
+          "name": "cart",
+          "caption": "The cart.",
+          "url": "https://www.saucedemo.com/cart.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=shopping-cart-link]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "03_checkout/03_details_missing.png",
+          "name": "details_missing",
+          "caption": "Continue with nothing filled in: the form says what is missing.",
+          "url": "https://www.saucedemo.com/checkout-step-one.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=continue]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "03_checkout/04_details.png",
+          "name": "details",
+          "caption": "Name and postcode filled in.",
+          "url": "https://www.saucedemo.com/checkout-step-one.html",
+          "title": "Swag Labs",
+          "via": null,
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "03_checkout/05_overview.png",
+          "name": "overview",
+          "caption": "The overview: items, payment, delivery and the total with tax.",
+          "url": "https://www.saucedemo.com/checkout-step-two.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=continue]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        },
+        {
+          "file": "03_checkout/06_complete.png",
+          "name": "complete",
+          "caption": "Order placed. A practice shop: nothing is sent or charged.",
+          "url": "https://www.saucedemo.com/checkout-complete.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=finish]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "04_menu",
+      "title": "The menu",
+      "description": "",
+      "fresh": false,
+      "shots": [
+        {
+          "file": "04_menu/01_menu.png",
+          "name": "menu",
+          "caption": "The side menu.",
+          "url": "https://www.saucedemo.com/inventory.html",
+          "title": "Swag Labs",
+          "via": "click #react-burger-menu-btn",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "05_error_user",
+      "title": "The same checkout, as error_user",
+      "description": "error_user is one of the site's test accounts, with bugs planted in it. Most screens look normal; the page errors behind them are listed under \"What looked broken\" at the end.",
+      "fresh": true,
+      "shots": [
+        {
+          "file": "05_error_user/01_add_fails.png",
+          "name": "add_fails",
+          "caption": "Add to cart worked for the backpack but not the T-shirt: the cart counts one.",
+          "url": "https://www.saucedemo.com/inventory.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=add-to-cart-sauce-labs-bolt-t-shirt]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": [
+            "Failed to add item to the cart."
+          ]
+        },
+        {
+          "file": "05_error_user/02_last_name_empty.png",
+          "name": "last_name_empty",
+          "caption": "The last name was typed but stays empty.",
+          "url": "https://www.saucedemo.com/checkout-step-one.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=checkout]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": [
+            "Cannot read properties of undefined (reading 'value')"
+          ]
+        },
+        {
+          "file": "05_error_user/03_finish_stuck.png",
+          "name": "finish_stuck",
+          "caption": "Finish does nothing: still on the overview.",
+          "url": "https://www.saucedemo.com/checkout-step-two.html",
+          "title": "Swag Labs",
+          "via": "click [data-test=finish]",
+          "node": null,
+          "api": {
+            "calls": 0,
+            "failed": []
+          },
+          "errors": [
+            "wa.cesetRart is not a function"
+          ]
+        }
+      ],
+      "error": null
+    }
+  ]
+}

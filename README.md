@@ -62,6 +62,11 @@ The screenshots include one flow signed in as `error_user`, an account with bugs
 screens look almost normal, and `walkthrough.md` ends with the three page errors behind them. The
 read-only guard blocks the site's error reports to backtrace.io, its only writes.
 
+**To see the results without running anything**, a run of both is committed:
+[the screenshot walkthrough](screenshots/examples/saucedemo/sample/walkthrough.md) (after cloning,
+open `gallery.html` or `index.html` in that folder) and
+[the two videos](videos/examples/saucedemo/sample/).
+
 ---
 
 ## Point it at your own app
