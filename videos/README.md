@@ -2,8 +2,9 @@
 
 Records narrated how-to videos of a web app by driving it with Playwright the way a person would:
 a visible cursor glides to each control, clicks ripple, typing runs at reading pace. Every line of
-narration is shown as a caption **and** spoken by a local voice ([Kokoro](https://huggingface.co/hexgrad/Kokoro-82M),
-Apache-2.0, offline). Waits on the server are cut out of the picture.
+narration is shown as a caption **and** spoken: by default by a local voice
+([Kokoro](https://huggingface.co/hexgrad/Kokoro-82M), Apache-2.0, offline), or by a TTS API (OpenAI,
+ElevenLabs, Google, Azure). Waits on the server are cut out of the picture.
 
 Each video comes out as:
 
@@ -23,6 +24,7 @@ Each video comes out as:
 ./redo.sh --project examples/demo --headed          # watch it drive the browser
 ./redo.sh --project examples/demo --no-voice        # captions only
 ./redo.sh --project examples/demo --voice bf_emma   # another voice (list below)
+./redo.sh --project examples/demo --tts openai --voice nova   # a TTS API voice instead of the local one
 ./redo.sh --project examples/demo --assemble examples/demo/out/runs/<t> --only 2   # re-join from a run's clips
 ```
 
@@ -147,10 +149,10 @@ counts and names in the `load` hook instead, and check against the page while re
 
 1. **Plan**: which scenes to record, in which passes. `--only` trims each pass after the last
    scene it records.
-2. **Voice**: the dry run collects every line. New lines are voiced by Kokoro, then heard back by
-   Whisper. Lines whose transcript doesn't match are listed (fix a name with `voice.lexicon`).
-   Clips are cached in `~/.cache/walkthrough-kit/voice`, shared by all projects, so a re-record
-   only voices lines that changed.
+2. **Voice**: the dry run collects every line. New lines are voiced (Kokoro or the API), then
+   heard back by Whisper. Lines whose transcript doesn't match are listed (fix a name with
+   `voice.lexicon` or `voice.respell`). Clips are cached in `~/.cache/walkthrough-kit/voice`,
+   shared by all projects, so a re-record only voices lines that changed.
 3. **Passes**: per pass, `stack().restore()` rewinds the app, a fresh browser starts, and the
    scenes run: recorded ones at presentation pace, the others instantly.
 4. **Recording**: Chrome's own screencast frames at 1920×960 (a 1536×768 window at 1.25×), re-timed
@@ -160,18 +162,68 @@ counts and names in the `load` hook instead, and check against the page while re
 
 ## The voice
 
-`data.voice`: `{ "id": "af_heart", "speed": 1, "lexicon": { "Wekesa": "wɛkˈɛsə" } }`.
-Voices starting `a` are American English, `b` British: `af_heart`, `af_bella`, `am_michael`,
-`bf_emma`, `bm_george`... ([all voices](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md)).
-The lexicon gives phonemes for names it gets wrong; only lines using an entry are re-voiced.
+Every caption is also spoken: by **Kokoro**, a local model (no account, no cost, works offline), or
+by a **TTS API** when you'd rather not install the model or want a particular voice. `data.voice`,
+every field optional:
 
-To compare voices on a finished video without re-recording:
+```json
+{ "provider": "kokoro", "id": "af_heart", "speed": 1,
+  "lexicon": { "Wekesa": "wɛkˈɛsə" }, "respell": { "Wekesa": "Weh-keh-sah" } }
+```
+
+| `provider` | Key, from the environment | Voices (`id`) | Default |
+|---|---|---|---|
+| `kokoro` (local) | none | `af_heart`, `bf_emma`, `am_michael`, `bm_george`... ([all](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md); `a` American, `b` British) | `af_heart` |
+| `openai` | `OPENAI_API_KEY` | `alloy`, `coral`, `nova`, `sage`, `shimmer`...; `model` `gpt-4o-mini-tts` or `tts-1-hd` | `coral` |
+| `elevenlabs` | `ELEVENLABS_API_KEY` | a voice id from your ElevenLabs voice library; `model` `eleven_multilingual_v2`... | `JBFqnCBsd6RMkjVDRZzb` |
+| `google` | `GOOGLE_TTS_API_KEY` | `en-GB-Neural2-A`, `en-US-Studio-O`... | `en-US-Neural2-F` |
+| `azure` | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` | `en-GB-SoniaNeural`, `en-US-AndrewMultilingualNeural`... | `en-US-AvaMultilingualNeural` |
+
+Try one without editing `data.json`: `./redo.sh --project <dir> --tts openai --voice nova`. (A
+`--tts` that differs from `data.voice.provider` ignores its `id`, `model`, `instructions` and
+`options`: they belong to the other provider.)
+
+- `speed`: 1 is the voice's normal pace, for every provider.
+- `lexicon` (Kokoro): phonemes for a name it gets wrong. `respell` (any voice): a spelling that comes
+  out right; the caption keeps the real word. Only lines using an entry are re-voiced.
+- `model`; `instructions` for OpenAI's `gpt-4o-mini-tts` ("Calm and friendly."); `options`: extra
+  fields merged into the API's request body (ElevenLabs `voice_settings`, Google `audioConfig`...;
+  not Azure).
+- `OPENAI_BASE_URL` points `openai` at any OpenAI-compatible speech server (self-hosted, a proxy).
+- Keys come from the environment only. Never put one in `data.json`.
+
+API clips are cached like Kokoro's (by provider, voice, model and text), so a re-record pays only for
+the lines that changed. Lines are requested four at a time. The Whisper check needs the local voice
+environment (`./setup-voice.sh`); without it the check is skipped.
+
+**Another provider**: `"provider": "./my-tts.mjs"` (relative to the project), or `--tts ./my-tts.mjs`:
+
+```js
+export default {
+  voice: 'narrator-1',                                   // the default voice id
+  async synthesize({ text, voice, model, speed }) {      // -> audio bytes, any format ffmpeg reads
+    const res = await fetch('https://tts.example.com/speak', {
+      method: 'POST', headers: { authorization: `Bearer ${process.env.MY_TTS_KEY}` },
+      body: JSON.stringify({ text, voice, speed }),
+    });
+    if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+    return Buffer.from(await res.arrayBuffer());
+  },
+};
+```
+
+**What the local voice needs**: no GPU, it runs on the CPU. Measured on 34 s of narration, after
+~4 s loading the model: about 10× faster than real time on 12 cores, 7× on 4, 4.5× on 2. Memory
+peaks at 1.6 GB (Whisper's check: 0.6 GB); the recorder wants 5 GB free before starting it. The
+install is ~2 GB. To skip it, run `./setup.sh --no-voice` and use an API voice.
+
+To compare Kokoro voices on a finished video without re-recording:
 `.venv/bin/python lib/voice_sample.py <project>/out/latest/01-x.mp4 --voices af_heart,bf_emma --out /tmp/voices`.
 To hear-check a finished video against its captions: `.venv/bin/python lib/check_voice.py <video>.mp4`.
 
 ## Memory
 
-The voice model needs about 2 GB. New lines are voiced before recording starts. A project with a
+The local voice model needs about 2 GB (an API voice needs none of this). New lines are voiced before recording starts. A project with a
 heavy local stack can stop it meanwhile (`beforeVoice` / `afterVoice`; the CCRS example does this).
 During a recording a missing line is voiced only if 5 GB is free, and on Linux inside a systemd scope
 capped at 3 GB. The recorder stops itself if free memory drops under 1.5 GB.

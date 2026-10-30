@@ -9,6 +9,7 @@
 //   node record.mjs --project <dir> --lines           # print every narration line, scene by scene (no browser)
 //   node record.mjs --project <dir> --voice-prep      # voice every line now (the model needs ~2 GB)
 //   node record.mjs --project <dir> --voice bf_emma   # another Kokoro voice; --no-voice for captions only
+//   node record.mjs --project <dir> --tts openai [--voice nova]   # a TTS API voice (openai, elevenlabs, google, azure)
 //   node record.mjs --project <dir> --assemble <dir>/out/runs/<t> --only 2   # re-join videos from a run
 //   node record.mjs --project <dir> --snapshot        # take the baseline the rewind returns to (if the project has one)
 //   node record.mjs --project <dir> --no-reset        # don't rewind between passes (debugging a scene)
@@ -29,6 +30,7 @@ import { Narrator, joinWavs, memAvailableMb } from './lib/narration.mjs';
 import { stub, stubActor, stubRecorder } from './lib/dryrun.mjs';
 import { mailbox } from './lib/mail.mjs';
 import { loadProject, PYTHON } from './lib/project.mjs';
+import { isModulePath } from './lib/voices.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 // Below this much free memory the run stops itself (browser closed, encoders
@@ -38,7 +40,7 @@ const MIN_FREE_MB = 1500;
 function parseArgs(argv) {
   const opts = {
     project: process.env.WALKTHROUGH_PROJECT || 'examples/demo', data: null, only: null, reset: true, captions: true,
-    headed: false, speed: 1, snapshot: false, resnapshot: false, out: null, voice: undefined, voicePrep: false, lines: false, assemble: null,
+    headed: false, speed: 1, snapshot: false, resnapshot: false, out: null, voice: undefined, tts: null, voicePrep: false, lines: false, assemble: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -55,13 +57,39 @@ function parseArgs(argv) {
     else if (a === '--out') opts.out = next();
     else if (a === '--voice') opts.voice = next();
     else if (a === '--no-voice') opts.voice = null;
+    else if (a === '--tts') opts.tts = next();
     else if (a === '--voice-prep') opts.voicePrep = true;
     else if (a === '--lines') opts.lines = true;
     else if (a === '--assemble') opts.assemble = next();
-    else if (a === '--help' || a === '-h') { console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(1, 22).join('\n')); process.exit(0); }
+    else if (a === '--help' || a === '-h') {
+      const head = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(1);
+      console.log(head.slice(0, head.findIndex((l) => !l.startsWith('//'))).join('\n'));
+      process.exit(0);
+    }
     else throw new Error(`unknown argument ${a}`);
   }
   return opts;
+}
+
+/**
+ * The narrator for data.voice, with --tts / --voice on top. data.voice's id, model,
+ * instructions and options belong to its provider, so they're dropped when --tts
+ * picks another one (the new provider's default voice is used unless --voice says).
+ */
+async function narratorFor(v, opts, projectDir) {
+  const own = v.provider ?? 'kokoro';
+  const provider = opts.tts ?? own;
+  const same = provider === own;
+  return Narrator.create({
+    provider: isModulePath(provider) ? resolve(projectDir, provider) : provider, // --tts paths are made absolute up front
+    voice: opts.voice ?? (same ? v.id : undefined),
+    model: same ? v.model : undefined,
+    instructions: same ? v.instructions : undefined,
+    options: same ? v.options : undefined,
+    speed: v.speed ?? 1,
+    lexicon: v.lexicon ?? {},
+    respell: v.respell ?? {},
+  });
 }
 
 /** Which scene ids to record, from --only (scene ids, video ids or video numbers). */
@@ -219,6 +247,7 @@ async function main() {
   opts.out = resolve(opts.out ?? join(project.dir, 'out'));
   const dataFile = resolve(opts.data ?? join(project.dir, project.data));
   if (opts.assemble) opts.assemble = resolve(opts.assemble);
+  if (opts.tts && isModulePath(opts.tts)) opts.tts = resolve(opts.tts);
   process.chdir(HERE);
   mkdirSync(opts.out, { recursive: true });
   const data = JSON.parse(readFileSync(dataFile, 'utf8'));
@@ -243,8 +272,7 @@ async function main() {
   const record = selectedScenes(project, opts.only);
   if (opts.assemble) return reassemble(project, opts.assemble, record, opts.out);
   const passes = plan(project, record);
-  const voice = opts.voice === undefined ? (data.voice?.id ?? 'af_heart') : opts.voice;
-  const narrator = voice ? new Narrator({ voice, speed: data.voice?.speed ?? 1, lexicon: data.voice?.lexicon ?? {} }) : null;
+  const narrator = opts.voice === null ? null : await narratorFor(data.voice ?? {}, opts, project.dir);
   const dry = { data, base, state: {}, dir: project.dir };
 
   if (opts.lines) {
@@ -262,18 +290,20 @@ async function main() {
     const steps = passes.flatMap((p) => p.steps.filter((s) => s.recording));
     const lines = await collectLines(project, steps, dry);
     const missing = [...new Set(lines)].filter((l) => !narrator.has(l));
-    if (opts.voicePrep || missing.length) console.log(`Narration (${voice}): ${new Set(lines).size} lines, ${missing.length} to voice`);
+    if (opts.voicePrep || missing.length) console.log(`Narration (${narrator.label}): ${new Set(lines).size} lines, ${missing.length} to voice`);
     if (missing.length) {
-      await stack?.beforeVoice?.();
+      // Only the local model needs the memory a heavy stack is holding.
+      const local = !narrator.api;
+      if (local) await stack?.beforeVoice?.();
       try {
-        await narrator.synthesise(missing); // refuses (with a hint) if memory is short
+        await narrator.synthesise(missing); // the local model refuses (with a hint) if memory is short
         await narrator.close();
         // Hear every new clip back and flag lines the voice got wrong.
-        console.log(`  checking the new clips with Whisper (report: ${join(opts.out, 'voice-check.tsv')})`);
+        if (narrator.canCheck) console.log(`  checking the new clips with Whisper (report: ${join(opts.out, 'voice-check.tsv')})`);
         console.log(await narrator.check(missing, { report: join(opts.out, 'voice-check.tsv') }));
       } finally {
         await narrator.close();
-        await stack?.afterVoice?.({ restoring: !opts.voicePrep && opts.reset });
+        if (local) await stack?.afterVoice?.({ restoring: !opts.voicePrep && opts.reset });
       }
     }
     if (opts.voicePrep) return;
@@ -284,7 +314,7 @@ async function main() {
   const stamp = new Date().toISOString().replace(/[:T]/g, '-').slice(0, 19);
   const runDir = join(opts.out, 'runs', stamp);
   mkdirSync(join(runDir, 'raw'), { recursive: true });
-  console.log(`Run ${stamp}: recording ${[...record].join(', ')}${narrator ? ` (voice ${voice})` : ''}`);
+  console.log(`Run ${stamp}: recording ${[...record].join(', ')}${narrator ? ` (voice ${narrator.label})` : ''}`);
 
   let browser = null;
   let lowest = memAvailableMb();

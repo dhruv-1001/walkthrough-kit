@@ -6,7 +6,7 @@ Two tools that turn a running web app into documentation, by driving it in a rea
 | | What you get | Folder |
 |---|---|---|
 | **Screenshots** | Every screen of an app, captured in order: an interactive sitemap graph, a captioned gallery and a markdown walkthrough that ends with a list of the screens whose API calls failed. Safe on live deployments: a read-only guard stops every write. | [`screenshots/`](screenshots/) |
-| **Videos** | Narrated how-to videos: 1080p MP4 with burnt-in captions, a natural voice-over made locally (no cloud TTS) and an `.srt` file for YouTube. A visible cursor glides, clicks and types at reading pace, and server waits are cut out. | [`videos/`](videos/) |
+| **Videos** | Narrated how-to videos: 1080p MP4 with burnt-in captions, a natural voice-over (made locally by default, or by a TTS API: OpenAI, ElevenLabs, Google, Azure) and an `.srt` file for YouTube. A visible cursor glides, clicks and types at reading pace, and server waits are cut out. | [`videos/`](videos/) |
 
 Both run against **any** web app: you describe your app in a plan (screenshots) or a small project
 folder (videos). Each comes with three examples: **Brightdesk**, a small helpdesk app bundled in
@@ -27,7 +27,8 @@ You need Node 20+, Python 3.10+ and `ffmpeg` (`sudo apt install ffmpeg` / `brew 
 git clone https://github.com/dhruv-1001/walkthrough-kit && cd walkthrough-kit
 
 screenshots/setup.sh          # Python env, Playwright, Chromium          (~1 min)
-videos/setup.sh               # Node deps, Chromium, the voice: Kokoro + Whisper   (~5 min, ~2 GB)
+videos/setup.sh               # Node deps, Chromium, the local voice: Kokoro + Whisper   (~5 min, ~2 GB;
+                              #   --no-voice skips it, for a TTS API voice: see videos/README.md)
 
 ./demo.sh                     # starts Brightdesk, runs both tools, stops it
 ```
@@ -154,7 +155,7 @@ screenshots/
   examples/ccrs-configurator/   plan + hooks for the DIGIT configurator (Keycloak sign-in, 40 screens)
 videos/
   record.mjs, redo.sh     the recorder
-  lib/                    screen recorder, cursor + human-paced actions, captions, voice (Kokoro), Whisper check
+  lib/                    screen recorder, cursor + human-paced actions, captions, voice (Kokoro or a TTS API), Whisper check
   examples/demo/          3 videos of Brightdesk, 2 passes
   examples/saucedemo/     2 videos of a public site: no stack, defaults for everything else
   examples/ccrs-configurator/   the 5 CCRS onboarding videos, 3 passes, Postgres-snapshot rewind

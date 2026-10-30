@@ -1,8 +1,9 @@
 // Spoken narration for the captions: every caption line is also read aloud by
-// Kokoro (lib/narrate.py, local and offline). Clips are cached on disk by
-// voice + text, so a redo only synthesises lines that changed.
+// Kokoro (lib/narrate.py, local and offline) or by a TTS API (lib/voices.mjs).
+// Clips are cached on disk by voice + text, so a redo only synthesises lines
+// that changed.
 //
-// Memory: the model needs ~2 GB. Every line is voiced before recording starts
+// Memory (Kokoro only): the model needs ~2 GB. Every line is voiced before recording starts
 // (a project with a heavy stack can stop it meanwhile: stack().beforeVoice);
 // a line missing during a recording is synthesised only if plenty of memory is
 // free, and on Linux always inside a systemd scope capped at 3 GB, so the
@@ -14,8 +15,11 @@ import { homedir, freemem } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import { PYTHON } from './project.mjs';
+import { loadProvider, toClip } from './voices.mjs';
 
 const VERSION = 2; // bump when narrate.py's clip post-processing changes
+const API_VERSION = 1; // bump when toClip()'s post-processing changes
+const API_PARALLEL = 4; // lines requested from an API at once
 const RATE = 24000;
 export const LEAD = 0.15; // voice starts this long after its caption appears
 export const TAIL = 0.45; // quiet after a line before the next caption may appear
@@ -79,25 +83,57 @@ function readSamples(file) {
 
 export class Narrator {
   /**
+   * Use Narrator.create(): an API provider is loaded before the first line.
    * @param {object} o
-   * @param {string} o.voice   Kokoro voice id (af_heart, bf_emma, ...)
-   * @param {number} [o.speed] 1 = Kokoro's normal pace
-   * @param {object} [o.lexicon] word -> phonemes, for names the voice gets wrong
+   * @param {string} [o.provider] 'kokoro' (local, the default), an API (openai, elevenlabs, google, azure) or a module path
+   * @param {string} [o.voice]   the provider's voice id (Kokoro: af_heart, bf_emma, ...); default: the provider's
+   * @param {string} [o.model]   the API's model, where it has several
+   * @param {number} [o.speed]   1 = the voice's normal pace
+   * @param {object} [o.lexicon] Kokoro only: word -> phonemes, for names the voice gets wrong
+   * @param {object} [o.respell] any voice: word -> how to spell it so it's said right ("Wekesa": "Weh-keh-sah")
+   * @param {string} [o.instructions] OpenAI's gpt-4o-mini-tts: how to speak ("calm and friendly")
+   * @param {object} [o.options] extra fields merged into the API's request body
    */
-  constructor({ voice = 'af_heart', speed = 1, lexicon = {}, cache = VOICE_CACHE, python = PYTHON } = {}) {
-    Object.assign(this, { voice, speed, lexicon, cache: resolve(cache), python: resolve(python) });
+  constructor({ provider = 'kokoro', voice, model, speed = 1, lexicon = {}, respell = {}, instructions, options, cache = VOICE_CACHE, python = PYTHON } = {}) {
+    Object.assign(this, { provider, voice, model, speed, lexicon, respell, instructions, options, cache: resolve(cache), python: resolve(python) });
+    this.api = null;
     this.worker = null;
+  }
+
+  static async create(o) {
+    const n = new Narrator(o);
+    if (n.provider !== 'kokoro') n.api = await loadProvider(n.provider);
+    n.voice ??= n.api ? n.api.voice : 'af_heart';
+    n.model ??= n.api?.model;
+    if (!n.voice) throw new Error(`voice provider ${n.api.name} has no default voice: set data.voice.id`);
+    return n;
+  }
+
+  /** "af_heart", or "openai coral" for an API voice. */
+  get label() {
+    return this.api ? `${this.api.name} ${this.voice}` : this.voice;
+  }
+
+  /** What is sent to the voice for a caption: spokenText() with the respellings applied. */
+  spoken(caption) {
+    let text = spokenText(caption);
+    for (const [word, said] of Object.entries(this.respell)) text = text.replace(wordRe(word, 'g'), () => said);
+    return text;
   }
 
   /** The lexicon entries a line actually uses (so a new entry re-voices only its lines). */
   lexiconFor(text) {
-    return Object.fromEntries(Object.entries(this.lexicon).filter(([word]) => new RegExp(`(^|[^\\w])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^\\w])`).test(text)));
+    return Object.fromEntries(Object.entries(this.lexicon).filter(([word]) => wordRe(word).test(text)));
   }
 
   path(caption) {
-    const text = spokenText(caption);
-    const key = createHash('sha1').update(JSON.stringify([VERSION, this.voice, this.speed, text, this.lexiconFor(text)])).digest('hex').slice(0, 16);
-    return join(this.cache, this.voice, `${key}.wav`);
+    const text = this.spoken(caption);
+    const hash = (parts) => createHash('sha1').update(JSON.stringify(parts)).digest('hex').slice(0, 16);
+    if (this.api) {
+      const key = hash([API_VERSION, this.model ?? null, this.speed, this.instructions ?? null, this.options ?? null, text]);
+      return join(this.cache, this.api.name, this.voice.replace(/[^\w.-]/g, '_'), `${key}.wav`);
+    }
+    return join(this.cache, this.voice, `${hash([VERSION, this.voice, this.speed, text, this.lexiconFor(text)])}.wav`);
   }
 
   has(caption) {
@@ -115,7 +151,11 @@ export class Narrator {
   async synthesise(captions, { during = 'prep' } = {}) {
     const todo = [...new Set(captions)].filter((c) => !this.has(c));
     if (!todo.length) return 0;
+    if (this.api) return this.fromApi(todo, during);
     if (!this.worker) {
+      if (!existsSync(this.python)) {
+        throw new Error(`no local voice yet: run videos/setup-voice.sh, use a TTS API (--tts openai, see videos/README.md "The voice") or pass --no-voice`);
+      }
       const free = memAvailableMb();
       if (free < MIN_FREE_FOR_WORKER_MB) {
         throw new Error(`${todo.length} narration line(s) not voiced yet, and only ${free} MB of memory is free (the voice model needs ~2 GB; ${MIN_FREE_FOR_WORKER_MB} MB required). `
@@ -126,12 +166,42 @@ export class Narrator {
     for (const [i, caption] of todo.entries()) {
       const out = this.path(caption);
       mkdirSync(dirname(out), { recursive: true });
-      const res = await this.ask({ text: spokenText(caption), voice: this.voice, speed: this.speed, lexicon: this.lexiconFor(spokenText(caption)), out });
+      const text = this.spoken(caption);
+      const res = await this.ask({ text, voice: this.voice, speed: this.speed, lexicon: this.lexiconFor(text), out });
       if (res.error) throw new Error(`narration failed for "${caption}": ${res.error}`);
       if (during === 'prep') process.stdout.write(`\r  voiced ${i + 1}/${todo.length}`);
     }
     if (during === 'prep') process.stdout.write('\n');
     return todo.length;
+  }
+
+  /** Lines from the API, a few at a time; each one cached as soon as it arrives. */
+  async fromApi(todo, during) {
+    const queue = [...todo];
+    let done = 0;
+    const one = async (caption) => {
+      const out = this.path(caption);
+      mkdirSync(dirname(out), { recursive: true });
+      try {
+        const { voice, model, speed, instructions, options } = this;
+        toClip(await this.api.synthesize({ text: this.spoken(caption), voice, model, speed, instructions, options }), out);
+      } catch (e) {
+        queue.length = 0; // stop the other requests: no point paying for lines of a run that won't happen
+        throw new Error(`narration failed for "${caption}": ${e.message}`);
+      }
+      done += 1;
+      if (during === 'prep') process.stdout.write(`\r  voiced ${done}/${todo.length}`);
+    };
+    await Promise.all(Array.from({ length: Math.min(API_PARALLEL, queue.length) }, async () => {
+      while (queue.length) await one(queue.shift());
+    }));
+    if (during === 'prep') process.stdout.write('\n');
+    return todo.length;
+  }
+
+  /** Whisper is in the local voice environment; without it the check is skipped. */
+  get canCheck() {
+    return existsSync(this.python);
   }
 
   startWorker() {
@@ -165,6 +235,7 @@ export class Narrator {
    * name can be fixed with data.voice.lexicon). Same memory cap as the voice.
    */
   async check(captions, { report }) {
+    if (!this.canCheck) return '  voice check skipped: Whisper comes with the local voice (videos/setup-voice.sh)';
     const items = [...new Set(captions)].map((c) => ({ wav: this.path(c), text: spokenText(c) })).filter((i) => existsSync(i.wav));
     const manifest = `${report}.json`;
     writeFileSync(manifest, JSON.stringify(items));
@@ -186,6 +257,11 @@ export class Narrator {
       w.stdin.end();
     });
   }
+}
+
+/** Matches `word` as a whole word. */
+function wordRe(word, flags = '') {
+  return new RegExp(`(?<!\\w)${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\w)`, flags);
 }
 
 /**

@@ -1,6 +1,6 @@
 ---
 name: narrated-videos
-description: Record narrated, captioned how-to videos of a web app (1080p MP4 with burnt-in captions, a local AI voice-over and .srt files) using walkthrough-kit's video tool, which drives the real app in a browser with a visible cursor. Use when asked to make onboarding, tutorial, training, demo or how-to videos of a web app's flows, to add a flow to an existing set, or to re-record videos after the UI changed.
+description: Record narrated, captioned how-to videos of a web app (1080p MP4 with burnt-in captions, an AI voice-over made locally or by a TTS API, and .srt files) using walkthrough-kit's video tool, which drives the real app in a browser with a visible cursor. Use when asked to make onboarding, tutorial, training, demo or how-to videos of a web app's flows, to add a flow to an existing set, or to re-record videos after the UI changed.
 ---
 
 # Narrated videos
@@ -16,8 +16,12 @@ passes, a database rewind).
 
 ```bash
 VIDEOS=${CLAUDE_SKILL_DIR}/../../videos
-[ -x $VIDEOS/.venv/bin/python ] || $VIDEOS/setup.sh     # needs ffmpeg; ~2 GB for the voice
+[ -x $VIDEOS/.venv/bin/python ] || $VIDEOS/setup.sh     # needs ffmpeg; ~2 GB for the local voice
 ```
+
+The voice is local (Kokoro) unless the user wants an API one: then `--tts openai|elevenlabs|google|azure`
+(or `data.voice.provider`), with the key in the environment (`OPENAI_API_KEY`...), never in a file.
+`$VIDEOS/setup.sh --no-voice` skips the local model for them. See "The voice" in the README.
 
 ## 2. Agree the videos before any code
 
@@ -86,7 +90,7 @@ Read before changing the scene.
   `ffmpeg -v error -ss <seconds> -i <video>.mp4 -frames:v 1 -vf scale=1280:-1 /tmp/f.png`, then Read
   them. Does the screen show what the caption says, with the cursor on it?
 - **Voice**: `out/voice-check.tsv` and the run's "to listen to" list. A mangled name gets a
-  `voice.lexicon` entry with phonemes. A transcription quirk (an apostrophe, "Market is" for
+  `voice.lexicon` entry with phonemes (Kokoro) or a `voice.respell` (any voice). A transcription quirk (an apostrophe, "Market is" for
   "Mark it as") is fine.
 - **Length and joins**: `ffprobe` each MP4. A joined video should switch parts cleanly.
 
@@ -95,7 +99,7 @@ Then record everything: `$VIDEOS/redo.sh --project my-videos`. Deliver
 
 ## Don't
 
-- Don't start the voice model beside a memory-heavy stack. New lines are voiced before
+- Don't start the local voice model beside a memory-heavy stack. New lines are voiced before
   recording. If the app is heavy, implement `beforeVoice`/`afterVoice` to stop and start it.
 - Don't record against a shared or production deployment without the user's say-so: scenes make
   real changes (sign-ups, records, emails).
